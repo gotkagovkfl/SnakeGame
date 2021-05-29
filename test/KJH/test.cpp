@@ -3,9 +3,9 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-
-
 using namespace std;
+
+
 // 각 오브젝트의 속성을 담는 부모 클래스
 class Object
 {
@@ -128,7 +128,7 @@ class Item
             numItem--;
         }
         // 특정 아이템 제거  (뱀과 접촉시)
-        void eraseItem(int y,int x)
+        void eraseItem(int y, int x)
         {
             for (int i=0;i<numItem;i++)
             {
@@ -164,12 +164,15 @@ class Snake
             Body body(tailY,++tailX);
             m[tailY][tailX]= body;
             s.push_back(body);
+            m[tailY][tailX]= body;
+            s.push_back(body);
 
             pushBody(m);
         }
 
         void setToY(int y){toY=y;}
         void setToX(int x){toX=x;}
+        
         //뱀 몸통 생성
         void pushBody(Object**& m)
         {
@@ -202,14 +205,14 @@ class Snake
             {
                 s[i].setYX(s[i-1].getY(),s[i-1].getX());
             }
-            // 머리이동
+            // 머리이동 
             nextY = s[0].getY()+toY;
             nextX = s[0].getX()+toX;
             s[0].setYX(nextY,nextX);   
 
             // 꼬리는 빈공간으로
             m[tailY][tailX]= Space(tailY,tailX); 
-            //그리고 꼬리 좌표 다시 
+            //그리고 꼬리 좌표 다시 2
             tailY = s[numBody-1].getY();
             tailX = s[numBody-1].getX(); 
 
@@ -218,6 +221,10 @@ class Snake
                 m[s[i].getY()][s[i].getX()]= s[i];
             }
         }
+
+        // 게임오버
+        void fail(){}
+
         //이동한 곳에 뭔가 있는 경우
         void afterMove(Object**& m,Item& item)
         {
@@ -231,11 +238,31 @@ class Snake
                     {
                         popBody(m);
                         item.eraseItem(obj.getY(),obj.getX()); // 특정 아이템 제거
+
+                        // 몸통 길이가 2이면 종료
+                        if (s.size() == 2){
+                            fail();
+                        }
+
                     }
                     else if (obj.getTN()==7) // 사과먹으면
                     {
                         pushBody(m);
                         item.eraseItem(obj.getY(),obj.getX());
+                    }
+                    else if (obj.getTN()==2) // 벽에 닿았을 때 실패
+                    {
+                        fail();
+                    }
+                    else if (obj.getTN()==2) // 빈 칸일 때
+                    {
+                        // 머리가 몸통에 닿았을 때 종료(꼬리방향 이동 포함)
+                        for (int i=1; i<s.size(); i++){
+                            // 몸통을 만나면 실패
+                            if ((s[i].getX() == s[0].getX()) && (s[i].getY() == s[0].getY())){
+                                fail();
+                            } 
+                        }
                     }
                 }
             }
