@@ -1,5 +1,5 @@
 # 현재 진행상황
-![Initial](https://user-images.githubusercontent.com/65711566/120096143-be634800-c164-11eb-8e3a-0d6568dc111b.png)
+![Initial](https://user-images.githubusercontent.com/65711566/120098131-2028af80-c16f-11eb-9fdd-625d729b2faa.png)
 
 # 해야할 것
 
