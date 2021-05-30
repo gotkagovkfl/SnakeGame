@@ -6,10 +6,9 @@
 
 using namespace std;
 
-
-
 bool play= true; //게임 종료 플래그
 void fail(){play=false;} // 게임 종료 함수 
+
 
 class Score
 {
@@ -167,7 +166,7 @@ public:
 };
 
 
-// 각 오브젝트의 속성을 담는 부모 클래스
+// 각 오브젝트의 속성을 담는 부모 클래스 (화면에 표시된 정사각형 하나하나가 오브젝트임)
 class Object
 {
     protected:
@@ -584,14 +583,13 @@ class Map
 {
     int width;
     int height;
-    int stageNum;
     
     friend class Snake;
 
     public:
         Object** m;
 
-        Map(int w=21,int h=21, int sn=1): width(w), height(h), stageNum(sn)
+        Map(int w=21,int h=21): width(w), height(h)
         {
             // 좌표 형성
             m = new Object*[height];
@@ -614,9 +612,8 @@ class Map
 
         int getHeight(){return height;}
         int getWidth(){return width;}
-        int getStageNum(){return stageNum;}
 
-
+        // 가로 벽 생성
         void makeHorizontal(int height)
         {
             for(int i = 3; i < width-3; i++)
@@ -624,7 +621,7 @@ class Map
                 m[height][i] = NormalWall(height, i);
             }
         }
-
+        // 세로 벽 생성 
         void makeVertical(int width)
         {
             for(int i = 3; i < height-3; i++)
@@ -687,19 +684,13 @@ void mapUpdate(Object** m, int h, int w)
     }
     refresh();
 }
-// 점수업데이트 (이건 어차피 한줄인데 지워도 될듯..?)
-void scoreUpdate(WINDOW* win,Snake& s)
-{
-    mvwprintw(win, 7,2, "SCORE: %d/20     ",s.numBody);
-}
-
 
 // 시간의 흐름             // 레퍼런스 전달시 컴파일에러
-void timeUpdate(Snake *s,Object** *m,Item *i,GateNWall *g,int height, int width, Score *score, Map *map)
+void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
 {
     for(int a=0;a <4; a++)
     {
-        //상태창
+        //상태창 (스테이지마다 상태창을 새로 씀)
         WINDOW *win;
         win = newwin(map->getHeight(),30,0,map->getWidth()*2);
         wbkgd(win, COLOR_PAIR(10));
@@ -729,12 +720,12 @@ void timeUpdate(Snake *s,Object** *m,Item *i,GateNWall *g,int height, int width,
         double ItemCD = 0;
         double GateCD = 0;
 
+        // 스테이지 별로 뱀 위치 조정
         if(a > 0)
             {
                 s->Init(map->m);
                 i->Init(map->m);
             }
-
             if(score->stageNum == 2) map->makeVertical(10);
             if(score->stageNum == 3) map->makeHorizontal(15);
 
@@ -754,19 +745,19 @@ void timeUpdate(Snake *s,Object** *m,Item *i,GateNWall *g,int height, int width,
             {
                 if (time >=initItemCD*0.003 && i->numItem >=3) // 동시에 3개만 유지할수있도록. 근데 가끔씩 4개됨. 해결 필요 ****************************** 
                 {
-                    i->popItem(*m);
+                    i->popItem(map->m);
                 }
-                i->pushItem(*m);
+                i->pushItem(map->m);
                 ItemCD=initItemCD;
             }
             // GateCD가 0이 될때마다 게이트 생성
             if (GateCD==0)
             {
-                g->selectGate(*m); //게이트 생성
+                g->selectGate(map->m); //게이트 생성
 
                 GateCD=initGateCD;
 
-                mvwprintw(win, 11,2, "(%d,%d)  ,  (%d,%d)   ",g->gate1.getY(),g->gate1.getX(),g->gate2.getY(),g->gate2.getX()); //디버깅용 포탈위치 출력
+                // mvwprintw(win, 11,2, "(%d,%d)  ,  (%d,%d)   ",g->gate1.getY(),g->gate1.getX(),g->gate2.getY(),g->gate2.getX()); //디버깅용 포탈위치 출력
             }
             
             // 점수업데이트
@@ -784,12 +775,8 @@ void timeUpdate(Snake *s,Object** *m,Item *i,GateNWall *g,int height, int width,
             wrefresh(win);
 
             // 뱀 움직임 업데이트
-            s->move(*m,*i,*g);
-            scoreUpdate(win,*s);// 점수변화
-            mapUpdate(*m,24,30);
-            mvwprintw(win, 13,2, "   ( %d,%d) %d  ", s->s[0].getY(),s->s[0].getX(),s->s[0].getTN()); // 디버깅용 뱀 머리 위치 출력
-            // refresh();   
-            // wrefresh(stdscr);  //refresh쓸때보다 화면이 덜 깨짐 (기분탓일 수도 있음) ******************************
+            s->move(map->m,*i,*g);
+            mapUpdate(map->m,24,30);
 
             napms(tick); //sleep과 같은 기능
             ItemCD-=tick;
@@ -798,7 +785,6 @@ void timeUpdate(Snake *s,Object** *m,Item *i,GateNWall *g,int height, int width,
             bool stageEnd = false;
                 if(score->LevelUp() == true)
                 {
-
                     while(1)
                     {
                         int input = getch();
@@ -827,7 +813,9 @@ int main()
     noecho(); // 입력을 자동으로 화면에 출력하지 않도록 합니다.
     curs_set(FALSE); // cursor를 보이지 않게 합니다. 
     start_color();
-
+    
+    
+    // 초기화면
     int x = 4;
     int y = 10;
 
@@ -938,7 +926,9 @@ int main()
 
     attron(A_BLINK);
     mvprintw(17, 32, "press 's' key");
-    // 겜초기화
+
+
+    // 겜 시작
     while(1){
         int input = getch();
         if(input == 's') break;
@@ -949,14 +939,14 @@ int main()
     // 겜초기화
 
     // 맵 초기화
-    Map map(30,24,1);
+    Map map(30,24);
     //아이템 리스트 초기화 
     Item item(map.m,map.getHeight(),map.getWidth());
     // 뱀 초기화
     Snake snake(map.m,map.getHeight(),map.getWidth());
     // 게이트 &월 초기화
     GateNWall gnw(map.m,map.getHeight(),map.getWidth());
-
+    //화면 
     Score score;
 
     // attron(A_CHARTEXT);
@@ -980,20 +970,13 @@ int main()
     init_pair(7, COLOR_RED, COLOR_RED); //사과색
     init_pair(8, 18,18); //게이트색
     init_pair(10, COLOR_BLACK, COLOR_WHITE); //상태창 색
-    // init_pair(10, COLOR_GREEN, COLOR_MAGENTA);
 
-    //맵 그래픽 생성
+    // int time = 0;
     
-    // refresh();
-    
-
-    int time = 0;
-    
-    thread t(timeUpdate,&snake, &map.m, &item,&gnw, map.getHeight(),map.getWidth(),&score, &map); // 스레드 생성
+    thread t(timeUpdate,&score,&map, &snake,  &item,&gnw) ; // 스레드 생성
 
     /////////////////////////////////////////////
     // 키입력 및 게임 메인 루프. 종료조건도 입력해야함******************************************************
-    // attrset(COLOR_PAIR(4));
     int input;
     keypad(stdscr, true); //특수키 입력받기 활성화
     while(true)
@@ -1002,7 +985,7 @@ int main()
         switch(input)
         {
             case KEY_UP:
-                if(snake.getToY() == 1 && snake.getToX() ==0) {fail();} //진행방향과 반대키 아직 제대로 동작안함 쓰레드 끊어야함
+                if(snake.getToY() == 1 && snake.getToX() ==0) {fail();} //진행방향과 반대키 아직 제대로 동작함 
                 
                 snake.setToY(-1);
                 snake.setToX(0);
@@ -1033,14 +1016,6 @@ int main()
 
         //디버깅용 입력
 
-	    // 한칸씩 이동
-        // if(input == 'm')
-        // {
-        //     snake.move(map.m);
-        //     snake.afterMove(map.m,item,gnw);
-        //     scoreUpdate(win,snake);// 점수변화
-        //     refresh();
-        // }   
         // 몸통추가
         if (input == '1')
         {
@@ -1066,11 +1041,6 @@ int main()
         {
             play = false;
         }
-
-        //업뎃한거 적용 
-        // mapUpdate(map.m,map.getHeight(),map.getWidth());
-        // refresh();
-        // wrefresh(win); 
     }
     if(t.joinable()){t.join();} // 다른 스레드가 먼저 끝나기를 기다림. 
     endwin(); // 화면 끔
