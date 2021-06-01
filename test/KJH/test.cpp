@@ -1,5 +1,5 @@
 #include <ncurses.h>
-#include <string>
+// #include <string>
 #include <iostream>
 #include <vector>
 #include <thread>
@@ -174,9 +174,8 @@ class Object
         int typeNum;
         
     public:
-        string str;
         
-        Object(int y=0, int x=0, int tn = 0,string str="ob"):x(x), y(y) ,str(str), typeNum(tn){}
+        Object(int y=0, int x=0, int tn = 0):x(x), y(y) , typeNum(tn){}
         virtual ~Object(){}
         
         int getY() {return y;}
@@ -192,7 +191,7 @@ class Object
 class Space :public Object
 {
     public:
-        Space (int y, int x):Object(y,x,1,".."){}
+        Space (int y, int x):Object(y,x,1){}
 
         ~Space(){}
 };
@@ -201,7 +200,7 @@ class NormalWall : public Object
 {
     public:
         bool isGate=false;
-        NormalWall (int y, int x):Object(y,x,2,"NW"){}
+        NormalWall (int y, int x):Object(y,x,2){}
 
         ~NormalWall(){}
 
@@ -210,7 +209,7 @@ class NormalWall : public Object
 class ImmueWall : public Object
 {
     public:
-        ImmueWall (int y, int x):Object(y,x,3,"IW"){}
+        ImmueWall (int y, int x):Object(y,x,3){}
 
         ~ImmueWall(){}
 };
@@ -218,7 +217,7 @@ class ImmueWall : public Object
 class Body: public Object
 {
     public:
-        Body (int y, int x):Object(y,x,4,"BD"){}
+        Body (int y, int x):Object(y,x,4){}
 
         ~Body(){}
 };
@@ -226,7 +225,7 @@ class Body: public Object
 class Head : public Object
 {     
     public:
-        Head (int y, int x):Object(y,x,5,"HD"){}
+        Head (int y, int x):Object(y,x,5){}
 
         ~Head(){}
 };
@@ -234,7 +233,7 @@ class Head : public Object
 class Poison : public Object
 {
     public:
-        Poison (int y, int x):Object(y,x,6,"PS"){}
+        Poison (int y, int x):Object(y,x,6){}
 
         ~Poison(){}
 };
@@ -242,7 +241,7 @@ class Poison : public Object
 class Apple : public Object
 {
     public:
-        Apple (int y, int x):Object(y,x,7,"AP"){}
+        Apple (int y, int x):Object(y,x,7){}
 
         ~Apple(){}
 };
@@ -250,7 +249,7 @@ class Apple : public Object
 class Gate: public Object
 {
     public:
-        Gate (int y, int x):Object(y,x,8,"GT"){}
+        Gate (int y, int x):Object(y,x,8){}
 
         ~Gate(){}
 };
@@ -273,20 +272,32 @@ class GateNWall
         vector <Object> walls; //벽을 담는 벡터 
 
         //생성자
-        GateNWall(Object**& m ,int h=21, int w= 21):height(h),width(w)
+        GateNWall(Object**& m ,int h=30, int w= 24):height(h),width(w)
         {
-            for (int j=0;j<h;j++)
-            {
-                for(int i=0;i<w;i++)
+            fillWalls(m);
+            selectGate(m);
+            // debugging(m);
+        }
+        // walls 벡터를 맵에서 일반 벽인 오브젝트로 채움
+        void fillWalls(Object**& m)
+        {
+            walls.clear();
+            
+            for (int j=0;j<height;j++){
+                for (int i=0;i<width;i++)
                 {
-                    if (m[j][i].getTN()==2)
-                    {
-                        walls.push_back(m[j][i]);
-                    }
+                    if (m[j][i].getTN()==2){walls.push_back(m[j][i]);}
                 }
             }
-            selectGate(m);
         }
+        // //for debugging
+        // void debugging(Object**& m)
+        // {
+        //     gate1 = Gate(0,5);
+        //     gate2 = Gate(0,6);
+        //     m[0][5]=gate1;
+        //     m[0][6]=gate2;
+        // }
         //게이트 선택
         void selectGate(Object** & m)
         {
@@ -366,7 +377,7 @@ class Item
         int numItem=0;
         vector <Object> it;
 
-        Item(Object**& m, int h = 21, int w = 21): height(h), width(w) { }
+        Item(Object**& m, int h = 30, int w = 24): height(h), width(w) { }
 
         void Init(Object**& m)
         {
@@ -434,7 +445,7 @@ class Snake
         int  tailY, tailX;
         vector <Object> s;
         
-        Snake(Object**& m,int h=21,int w=21) : tailY(h/2), tailX(w/2)
+        Snake(Object**& m,int h=30,int w=24) : tailY(h/2), tailX(w/2)
         {
             //처음에 길이가 3인 뱀 생성
             Head head(tailY,tailX);
@@ -461,6 +472,10 @@ class Snake
 
         void setToY(int y){toY=y;}
         void setToX(int x){toX=x;}
+
+        //게이트 통과중임을 나타내는 상태변수 조정
+        void setOnGate(){onGate=numBody;}
+        void decreaseOnGate(){if(onGate){onGate--;}}
         
         int getToY(){return toY;}
         int getToX(){return toX;}
@@ -512,7 +527,7 @@ class Snake
             m[tailY][tailX]= Space(tailY,tailX); 
             //그리고 꼬리 좌표 다시 
             tailY = s[numBody-1].getY();
-            tailX = s[numBody-1].getX(); 
+            tailX = s[numBody-1].getX();    
             
             // 움직인 곳에 뭔가 있을때,
             afterMove(m,item,gnw);            
@@ -555,6 +570,8 @@ class Snake
             Object obj = m[s[0].getY()][s[0].getX()]; //뱀 머리의 현재 위치에 있는 오브젝트
             if (obj.getTN()==8) // 오브젝트가 게이트라면 
             {
+                setOnGate(); 
+
                 if (obj.getY() == gnw.gate1.getY() && obj.getX() == gnw.gate1.getX()) //오브젝트가 게이트1 일때  게이트 2로나옴
                 {
                     
@@ -568,11 +585,7 @@ class Snake
                     s[0].setYX(gnw.gate1.getY()+toY,gnw.gate1.getX()+toX);
                 }
             }
-            else if (obj.getTN()==2) // 벽에 닿았을 때 실패
-            {
-                fail();
-            }
-            else if (obj.getTN()==4)  // 머리가 몸통에 닿았을 때 종료(꼬리방향 이동 포함)
+            else if (obj.getTN()==2 ||obj.getTN()==4) // 벽에 닿거나 몸통에 닿았을 때 실패
             {
                 fail();
             }
@@ -589,7 +602,7 @@ class Map
     public:
         Object** m;
 
-        Map(int w=21,int h=21): width(w), height(h)
+        Map(int w=30,int h=24): width(w), height(h)
         {
             // 좌표 형성
             m = new Object*[height];
@@ -636,50 +649,14 @@ class Map
 //맵 그래픽 생성
 void mapUpdate(Object** m, int h, int w)
 {
+    clear();
     for(int j = 0; j < h; j++)
     {
         for(int i = 0; i < w; i++)
         {
             int objType= m[j][i].getTN();
-            switch(objType) //따져야할 조건이 많을 때는 switch가 if 보다 좋음
-            {
-                case 1: //빈공간
-                    attrset(COLOR_PAIR(1));
-                    mvprintw(j, i*2, "00");
-                    break;
-                
-                case 2: // 일반벽
-                    attrset(COLOR_PAIR(2));
-                    mvprintw(j, i*2, "00");
-                    break;
-
-                case 3: // 딴딴벽
-                    attrset(COLOR_PAIR(3));
-                    mvprintw(j, i*2, "00");
-                    break;
-
-                case 4: // 뱀 몸통
-                    attrset(COLOR_PAIR(4));
-                    mvprintw(j, i*2, "00");
-                    break;
-
-                case 5: // 뱀 머리
-                    attrset(COLOR_PAIR(5));
-                    mvprintw(j, i*2, "00");
-                    break;
-                case 6: // 독
-                    attrset(COLOR_PAIR(6));
-                    mvprintw(j, i*2, "00");
-                    break;
-                case 7: //사과
-                    attrset(COLOR_PAIR(7));
-                    mvprintw(j, i*2, "00");
-                    break;
-                case 8: //게이트
-                    attrset(COLOR_PAIR(8));
-                    mvprintw(j, i*2, "00");
-                    break;
-            }
+            attrset(COLOR_PAIR(objType)); //타입에 맞게 색칠함
+            mvprintw(j, i*2, "00");
         }
     }
     refresh();
@@ -722,13 +699,13 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
 
         // 스테이지 별로 뱀 위치 조정
         if(a > 0)
-            {
-                s->Init(map->m);
-                i->Init(map->m);
-            }
-            if(score->stageNum == 2) map->makeVertical(10);
-            if(score->stageNum == 3) map->makeHorizontal(15);
-
+        {
+            s->Init(map->m);
+            i->Init(map->m);
+        }
+        if(score->stageNum == 2) {map->makeVertical(10); g->fillWalls(map->m);}
+        if(score->stageNum == 3) {map->makeHorizontal(15);g->fillWalls(map->m);}
+        //시간 흐름 
         do {
             box(win, 0,0);
 
@@ -751,15 +728,20 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
                 ItemCD=initItemCD;
             }
             // GateCD가 0이 될때마다 게이트 생성
+            s->decreaseOnGate();
             if (GateCD==0)
             {
-                g->selectGate(map->m); //게이트 생성
+                if (s->onGate==0){g->selectGate(map->m);} //게이트 생성
 
                 GateCD=initGateCD;
 
                 // mvwprintw(win, 11,2, "(%d,%d)  ,  (%d,%d)   ",g->gate1.getY(),g->gate1.getX(),g->gate2.getY(),g->gate2.getX()); //디버깅용 포탈위치 출력
             }
             
+            // 뱀 움직임 업데이트
+            s->move(map->m,*i,*g);
+            mapUpdate(map->m,24,30);
+
             // 점수업데이트
             if(score->stageNum == 1) mvwprintw(win, 7,2, "SCORE: %d/3     ",s->numBody-3);
             else if(score->stageNum == 2) mvwprintw(win, 7,2, "SCORE: %d/5     ",s->numBody-3);
@@ -774,32 +756,28 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
             time+=tick*0.001;
             wrefresh(win);
 
-            // 뱀 움직임 업데이트
-            s->move(map->m,*i,*g);
-            mapUpdate(map->m,24,30);
-
             napms(tick); //sleep과 같은 기능
             ItemCD-=tick;
             GateCD-=tick;
 
             bool stageEnd = false;
-                if(score->LevelUp() == true)
+            if(score->LevelUp() == true)
+            {
+                while(1)
                 {
-                    while(1)
+                    int input = getch();
+                    if(input == 'r')
                     {
-                        int input = getch();
-                        if(input == 'r')
-                        {
-                            stageEnd = true;
-                            break;
-                        } 
-                    }
+                        stageEnd = true;
+                        break;
+                    } 
                 }
-                if(stageEnd == true)
-                {
-                    clear();
-                    break;
-                }
+            }
+            if(stageEnd == true)
+            {
+                clear();
+                break;
+            }
         } while (play==true);
     }
 }
@@ -973,7 +951,7 @@ int main()
 
     // int time = 0;
     
-    thread t(timeUpdate,&score,&map, &snake,  &item,&gnw) ; // 스레드 생성
+    thread t(timeUpdate,&score,&map, &snake, &item, &gnw) ; // 스레드 생성
 
     /////////////////////////////////////////////
     // 키입력 및 게임 메인 루프. 종료조건도 입력해야함******************************************************
@@ -985,29 +963,21 @@ int main()
         switch(input)
         {
             case KEY_UP:
-                if(snake.getToY() == 1 && snake.getToX() ==0) {fail();} //진행방향과 반대키 아직 제대로 동작함 
-                
                 snake.setToY(-1);
                 snake.setToX(0);
                 break;
 
             case KEY_DOWN:
-                if(snake.getToY() == -1 && snake.getToX() ==0) {fail();}
-                
                 snake.setToY(1);
                 snake.setToX(0);
                 break;
                 
             case KEY_LEFT:
-                if(snake.getToY()== 0 && snake.getToX() ==1) {fail();}
-                
                 snake.setToY(0);
                 snake.setToX(-1);
                 break;
 
             case KEY_RIGHT:
-                if(snake.getToY()== 0 && snake.getToX() ==-1) {fail();}
-
                 snake.setToY(0);
                 snake.setToX(1);
                 break;
