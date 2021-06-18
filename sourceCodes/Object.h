@@ -1,6 +1,7 @@
+#ifndef __OBJ__
+#define __OBJ__
 
-
-// ê° ì˜¤ë¸Œì íŠ¸ì˜ ì†ì„±ì„ ë‹´ëŠ” ë¶€ëª¨ í´ë˜ìŠ¤ (í™”ë©´ì— í‘œì‹œëœ ì •ì‚¬ê°í˜• í•˜ë‚˜í•˜ë‚˜ê°€ ì˜¤ë¸Œì íŠ¸ì„)
+// °¢ ¿ÀºêÁ§Æ®ÀÇ ¼Ó¼ºÀ» ´ã´Â ºÎ¸ğ Å¬·¡½º (È­¸é¿¡ Ç¥½ÃµÈ Á¤»ç°¢Çü ÇÏ³ªÇÏ³ª°¡ ¿ÀºêÁ§Æ®ÀÓ)
 class Object
 {
     protected:
@@ -21,7 +22,7 @@ class Object
         void setTN(int typeNum) {this->typeNum = typeNum;}
 
 };
-// ë¹ˆê³µê°„
+// ºó°ø°£
 class Space :public Object
 {
     public:
@@ -29,7 +30,7 @@ class Space :public Object
 
         ~Space(){}
 };
-// ì¼ë°˜ë²½
+// ÀÏ¹İº®
 class NormalWall : public Object
 {
     public:
@@ -39,7 +40,7 @@ class NormalWall : public Object
         ~NormalWall(){}
 
 };
-// ë”´ë”´ë²½
+// µıµıº®
 class ImmueWall : public Object
 {
     public:
@@ -47,7 +48,7 @@ class ImmueWall : public Object
 
         ~ImmueWall(){}
 };
-// ë±€ ëª¸í†µ
+// ¹ì ¸öÅë
 class Body: public Object
 {
     public:
@@ -55,7 +56,7 @@ class Body: public Object
 
         ~Body(){}
 };
-// ë±€ ë¨¸ë¦¬
+// ¹ì ¸Ó¸®
 class Head : public Object
 {     
     public:
@@ -63,7 +64,7 @@ class Head : public Object
 
         ~Head(){}
 };
-// ë…
+// µ¶
 class Poison : public Object
 {
     public:
@@ -71,7 +72,7 @@ class Poison : public Object
 
         ~Poison(){}
 };
-// ì‚¬ê³¼
+// »ç°ú
 class Apple : public Object
 {
     public:
@@ -79,7 +80,7 @@ class Apple : public Object
 
         ~Apple(){}
 };
-//ê²Œì´íŠ¸
+//°ÔÀÌÆ®
 class Gate: public Object
 {
     public:
@@ -87,3 +88,5 @@ class Gate: public Object
 
         ~Gate(){}
 };
+
+#endif

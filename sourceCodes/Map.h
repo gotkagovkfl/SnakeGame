@@ -1,7 +1,7 @@
 #include "Object.h"
 
 
-//--------------------------ë§µ í´ë˜ìŠ¤ ------------------------------
+//--------------------------¸Ê Å¬·¡½º ------------------------------
 class Map
 {
     int width;
@@ -14,10 +14,10 @@ class Map
 
         Map(int w=30,int h=24): width(w), height(h)
         {
-            // ì¢Œí‘œ í˜•ì„±
+            // ÁÂÇ¥ Çü¼º
             m = new Object*[height];
             for (int i=0;i<height;i++){m[i]= new Object[width];}
-            // ì¼ë‹¨ ë²½ê³¼ ë¹ˆê³µê°„ìœ¼ë¡œ ì´ˆê¸°í™”
+            // ÀÏ´Ü º®°ú ºó°ø°£À¸·Î ÃÊ±âÈ­
             for (int j=0;j<height;j++){
                 for (int i=0;i<width;i++)
                 {
@@ -25,7 +25,7 @@ class Map
                     else {m[j][i] = Space(j,i);} 
                 }
             }
-            // ê¼­ì§€ì ì€ ë”´ë”´ë²½ìœ¼ë¡œ 
+            // ²ÀÁöÁ¡Àº µıµıº®À¸·Î 
             m[0][width-1]=ImmueWall(0,width-1);
             m[0][0] = ImmueWall(0,0);
             m[height-1][0] = ImmueWall(height-1,0);
@@ -36,7 +36,7 @@ class Map
         int getHeight(){return height;}
         int getWidth(){return width;}
 
-        // ê°€ë¡œ ë²½ ìƒì„±
+        // °¡·Î º® »ı¼º
         void makeHorizontal(int height)
         {
             for(int i = 4; i < width-4; i++)
@@ -45,7 +45,7 @@ class Map
                 else m[height][i] = NormalWall(height, i);
             }
         }
-        // ì„¸ë¡œ ë²½ ìƒì„± 
+        // ¼¼·Î º® »ı¼º 
         void makeVertical(int width)
         {
             for(int i = 4; i < height-4; i++)

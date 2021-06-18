@@ -1,11 +1,12 @@
+#ifndef __GATE__
+#define __GATE__
+
 #include <vector>
-
 #include "Object.h"
-
 
 using namespace std;
 
-//---------ê²Œì´íŠ¸ í´ë˜ìŠ¤------------ 
+//---------°ÔÀÌÆ® Å¬·¡½º------------ 
 class GateNWall
 {
     protected:
@@ -17,20 +18,20 @@ class GateNWall
         Object gate2;
         bool gateOpen=false; 
 
-        //ì¶œêµ¬ë¥¼ êµ¬í•˜ê¸° ìœ„í•œ ë³€ìˆ˜ë“¤
+        //Ãâ±¸¸¦ ±¸ÇÏ±â À§ÇÑ º¯¼öµé
         int exitOfGate[4][2] ={{-1,0},{0,1},{1,0},{0,-1}};
         int idxForFind=0;
 
-        vector <Object> walls; //ë²½ì„ ë‹´ëŠ” ë²¡í„° 
+        vector <Object> walls; //º®À» ´ã´Â º¤ÅÍ 
 
-        //ìƒì„±ì
+        //»ı¼ºÀÚ
         GateNWall(Object**& m ,int h=30, int w= 24):height(h),width(w)
         {
             fillWalls(m);
             selectGate(m);
             // debugging(m);
         }
-        // walls ë²¡í„°ë¥¼ ë§µì—ì„œ ì¼ë°˜ ë²½ì¸ ì˜¤ë¸Œì íŠ¸ë¡œ ì±„ì›€
+        // walls º¤ÅÍ¸¦ ¸Ê¿¡¼­ ÀÏ¹İ º®ÀÎ ¿ÀºêÁ§Æ®·Î Ã¤¿ò
         void fillWalls(Object**& m)
         {
             walls.clear();
@@ -50,12 +51,12 @@ class GateNWall
         //     m[0][5]=gate1;
         //     m[0][6]=gate2;
         // }
-        //ê²Œì´íŠ¸ ì„ íƒ
+        //°ÔÀÌÆ® ¼±ÅÃ
         void selectGate(Object** & m)
         {
-            //ë¨¼ì € í˜„ì¬ ê²Œì´íŠ¸ëŠ” ë²½ìœ¼ë¡œ ë³µêµ¬
+            //¸ÕÀú ÇöÀç °ÔÀÌÆ®´Â º®À¸·Î º¹±¸
             restore(m);
-             // ê²Œì´íŠ¸ì˜ ì¸ë±ìŠ¤ ë½‘ê¸° (2ê°œ)
+             // °ÔÀÌÆ®ÀÇ ÀÎµ¦½º »Ì±â (2°³)
             int randIdx1,randIdx2;
             do
             {
@@ -79,7 +80,7 @@ class GateNWall
 
             // walls[randIdx1]= 
         }
-        //ê²Œì´íŠ¸ ë˜ëŒë¦¬ê¸°
+        //°ÔÀÌÆ® µÇµ¹¸®±â
         void restore(Object**& m)
         {
             if (gateOpen)
@@ -88,26 +89,26 @@ class GateNWall
                 m[gate2.getY()][gate2.getX()] = NormalWall(gate2.getY(),gate2.getX());
             }
         }
-        //ê²Œì´íŠ¸ ì¶œêµ¬ ì¢Œí‘œêµ¬í•˜ê¸°
+        //°ÔÀÌÆ® Ãâ±¸ ÁÂÇ¥±¸ÇÏ±â
         void setExit(Object**& m,Object& g,int& toY,int& toX)
         {
             int tempY;
             int tempX;
-            // ì›í˜• ë¦¬ìŠ¤íŠ¸ì˜ ì‹œì‘ ì¸ë±ìŠ¤ êµ¬í•˜ê¸°
+            // ¿øÇü ¸®½ºÆ®ÀÇ ½ÃÀÛ ÀÎµ¦½º ±¸ÇÏ±â
             for(int i=0;i<4;i++)
             {
                 if (exitOfGate[i][0]== false && exitOfGate[i][1]) {idxForFind=i;break;} 
             }
 
-             //ì‹œê³„ë°©í–¥ìœ¼ë¡œ íƒìƒ‰
+             //½Ã°è¹æÇâÀ¸·Î Å½»ö
             for (int i=0;i<4;i++)
             {
                 tempY= g.getY()+exitOfGate[idxForFind][0],  
-                tempX= g.getX()+exitOfGate[idxForFind][1]; // í˜„ì¬ ê²Œì´íŠ¸ì˜ ìœ„ì¹˜ì—ì„œ ì‹œê³„ë°©í–¥ìœ¼ë¡œ ì°¾ê¸°
-				// í•´ë‹¹ì¢Œí‘œê°€ ë¹ˆê³µê°„ì´ë¼ë©´, ê²Œì´íŠ¸ì˜ ì¶œêµ¬ì„
-                if (0<=tempY &&tempY<height&& 0<tempX &&tempX< width) // ì‹œê³„ë°©í–¥ìœ¼ë¡œ í™•ì¸í•˜ëŠ” ì¢Œí‘œê°€ ë§µ ë°–ì´ ì•„ë‹ˆì–´ì•¼í•¨
+                tempX= g.getX()+exitOfGate[idxForFind][1]; // ÇöÀç °ÔÀÌÆ®ÀÇ À§Ä¡¿¡¼­ ½Ã°è¹æÇâÀ¸·Î Ã£±â
+				// ÇØ´çÁÂÇ¥°¡ ºó°ø°£ÀÌ¶ó¸é, °ÔÀÌÆ®ÀÇ Ãâ±¸ÀÓ
+                if (0<=tempY &&tempY<height&& 0<tempX &&tempX< width) // ½Ã°è¹æÇâÀ¸·Î È®ÀÎÇÏ´Â ÁÂÇ¥°¡ ¸Ê ¹ÛÀÌ ¾Æ´Ï¾î¾ßÇÔ
                 {
-                    if (m[tempY][tempX].getTN()==1){break;}   //ë§Œì•½ ì¶œêµ¬ê²Œì´íŠ¸ì˜ ì‚¬ë°©ì´ ë²½ìœ¼ë¡œ ë§‰í˜€ìˆìœ¼ë©´ ì£½ìŒ
+                    if (m[tempY][tempX].getTN()==1){break;}   //¸¸¾à Ãâ±¸°ÔÀÌÆ®ÀÇ »ç¹æÀÌ º®À¸·Î ¸·ÇôÀÖÀ¸¸é Á×À½
                 }
                 ++idxForFind%=4;
             }
@@ -119,3 +120,5 @@ class GateNWall
         }
 
 };
+
+#endif

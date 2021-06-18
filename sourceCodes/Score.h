@@ -1,7 +1,8 @@
 #include <ncurses.h>
 
+extern int gateUse;
+extern bool gameClear;
 
-//
 class Score
 {
 public:

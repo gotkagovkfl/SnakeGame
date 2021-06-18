@@ -1,3 +1,6 @@
+#ifndef __ITEM__
+#define __ITEM__
+
 #include <vector>
 #include <time.h>
 #include <random>
@@ -5,7 +8,7 @@
 
 using namespace std;
 
-//-----------------------ì•„ì´í…œ í´ë˜ìŠ¤---------------- 
+//-----------------------¾ÆÀÌÅÛ Å¬·¡½º---------------- 
 class Item
 {
     protected:
@@ -17,36 +20,36 @@ class Item
 
         Item(Object**& m, int h = 30, int w = 24): height(h), width(w) { }
 
-        //ì´ˆê¸°í™” í•¨ìˆ˜
+        //ÃÊ±âÈ­ ÇÔ¼ö
         void Init(Object**& m)
         {
             while(numItem > 0) popItem(m);
         }
-        // ì•„ì´í…œ ìƒì„± (ì‹œê°„ë§ˆë‹¤)
+        // ¾ÆÀÌÅÛ »ı¼º (½Ã°£¸¶´Ù)
         void pushItem(Object**& m)
         {
-             //ëœë¤ y,xê°’ ì¶”ì¶œ (ë¹ˆê³µê°„ì´ì–´ì•¼í•¨ ) ë™ê±¸ë¦¬ë©´ ì—¬ê¸°ì„œ whileë„ëŠë¼ ê·¸ëŸ°ê±°
+             //·£´ı y,x°ª ÃßÃâ (ºó°ø°£ÀÌ¾î¾ßÇÔ ) ·¢°É¸®¸é ¿©±â¼­ whileµµ´À¶ó ±×·±°Å
             int randY, randX;
             do
             {
                 srand((unsigned int)time(NULL));
                 randY=rand()%(height-2)+1;
                 randX=rand()%(width-2)+1;
-            } while (m[randY][randX].getTN() != 1); // ë¹ˆê³µê°„ì„ ì°¾ì„ë•Œê¹Œì§€ 
+            } while (m[randY][randX].getTN() != 1); // ºó°ø°£À» Ã£À»¶§±îÁö 
             
-            //ë… ì¼ì§€ ì‚¬ê³¼ì¼ì§€ ì •í•¨
+            //µ¶ ÀÏÁö »ç°úÀÏÁö Á¤ÇÔ
 			srand(time(NULL));
-            int n = rand()%2; //50 %í™•ë¥ 
-            //ê·¸ë¦¬ê³  ì•„ì´í…œ ë§Œë“¤ì–´ì„œ
+            int n = rand()%2; //50 %È®·ü
+            //±×¸®°í ¾ÆÀÌÅÛ ¸¸µé¾î¼­
             Object item;
             if (n) {item = Apple(randY,randX);}
             else {item = Poison(randY,randX);}
-            //ë²¡í„°ì— ì‚½ì…
+            //º¤ÅÍ¿¡ »ğÀÔ
             it.insert(it.begin(),item); 
             m[randY][randX] = item;
             numItem++;
         }
-        // ê°€ì¥ ì˜¤ë˜ëœ ì•„ì´í…œ ì œê±° (ì‹œê°„ ì´ˆê³¼, ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´ ì‹œ)
+        // °¡Àå ¿À·¡µÈ ¾ÆÀÌÅÛ Á¦°Å (½Ã°£ ÃÊ°ú, ½ºÅ×ÀÌÁö Å¬¸®¾î ½Ã)
         void popItem(Object**& m)
         {
             Object item = it[numItem-1];
@@ -54,7 +57,7 @@ class Item
             m[item.getY()][item.getX()]=Space(item.getY(),item.getX());
             numItem--;
         }
-        // íŠ¹ì • ì•„ì´í…œ ì œê±°  (ë±€ê³¼ ì ‘ì´‰ì‹œ)
+        // Æ¯Á¤ ¾ÆÀÌÅÛ Á¦°Å  (¹ì°ú Á¢ÃË½Ã)
         void eraseItem(int y,int x)
         {
             for (int i=0;i<numItem;i++)
@@ -69,3 +72,5 @@ class Item
             
         }
 };
+
+#endif

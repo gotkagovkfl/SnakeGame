@@ -10,9 +10,7 @@ extern int mapHeight;
 extern int gateUse;
 extern void fail();
 
-
-
-//----------------------ë±€ í´ë˜ìŠ¤------------------------------ 
+//----------------------¹ì Å¬·¡½º------------------------------ 
 class Snake
 {
     int toX=-1;
@@ -27,7 +25,7 @@ class Snake
         
         Snake(Object**& m,int h=30,int w=24) : tailY(h/2), tailX(w/2)
         {
-            //ì²˜ìŒì— ê¸¸ì´ê°€ 3ì¸ ë±€ ìƒì„±
+            //Ã³À½¿¡ ±æÀÌ°¡ 3ÀÎ ¹ì »ı¼º
             Head head(tailY,tailX);
             m[tailY][tailX]= head;
             s.push_back(head);
@@ -56,16 +54,16 @@ class Snake
         void setToY(int y){toY=y;}
         void setToX(int x){toX=x;}
 
-        //ê²Œì´íŠ¸ í†µê³¼ì¤‘ì„ì„ ë‚˜íƒ€ë‚´ëŠ” ìƒíƒœë³€ìˆ˜ ì¡°ì •
+        //°ÔÀÌÆ® Åë°úÁßÀÓÀ» ³ªÅ¸³»´Â »óÅÂº¯¼ö Á¶Á¤
         void setOnGate(){onGate=numBody;}
         void decreaseOnGate(){if(onGate){onGate--;}}
         
         int getToY(){return toY;}
         int getToX(){return toX;}
-        //ë±€ ëª¸í†µ ìƒì„±
+        //¹ì ¸öÅë »ı¼º
         void pushBody(Object**& m)
         {
-            //ëª¨ì„œë¦¬ì—ì„œ ìƒì„±ì‹œ ê°€ë” ë²½ ëš«ëŠ” í˜„ìƒ í•´ê²°í•´ì•¼í•¨ **********************************ì—¬ê¸°ì„œ
+            //¸ğ¼­¸®¿¡¼­ »ı¼º½Ã °¡²û º® ¶Õ´Â Çö»ó ÇØ°áÇØ¾ßÇÔ **********************************¿©±â¼­
             int chaiY = s[numBody-1].getY()-s[numBody-2].getY();
             int chaiX = s[numBody-1].getX()-s[numBody-2].getX();
             tailY += chaiY;
@@ -76,7 +74,7 @@ class Snake
             s.push_back(tail);
             numBody++;
         }
-        //ë±€ ëª¸í†µ ì œê±°
+        //¹ì ¸öÅë Á¦°Å
         void popBody(Object**& m)
         {
             m[s[numBody-1].getY()][s[numBody-1].getX()] = Space(s[numBody-1].getY(),s[numBody-1].getX());
@@ -85,7 +83,7 @@ class Snake
             tailY = s[numBody-1].getY();
             tailX = s[numBody-1].getX();
         }
-        // ë±€ì˜ ëª¸í†µ ìœ„ì¹˜ ì„¤ì •(ë°”ë¡œì•ì˜ ëª¸í†µì˜ ìœ„ì¹˜ë¡œ ì´ë™í•¨) (ë¨¸ë¦¬ëŠ” ì œì™¸)
+        // ¹ìÀÇ ¸öÅë À§Ä¡ ¼³Á¤(¹Ù·Î¾ÕÀÇ ¸öÅëÀÇ À§Ä¡·Î ÀÌµ¿ÇÔ) (¸Ó¸®´Â Á¦¿Ü)
         void setBodyPos()
         {
             for (int i=numBody-1; i>0; i--)
@@ -93,82 +91,82 @@ class Snake
                 s[i].setYX(s[i-1].getY(),s[i-1].getX());
             }
         }
-        //ë¨¸ë¦¬ìœ„ì¹˜ì„¤ì •(nextê°’ì„ ì„¤ì •í•˜ê³  ê·¸ ê°’ìœ¼ë¡œ ì´ë™)
+        //¸Ó¸®À§Ä¡¼³Á¤(next°ªÀ» ¼³Á¤ÇÏ°í ±× °ªÀ¸·Î ÀÌµ¿)
         void setHeadPos()
         {
             nextY = s[0].getY()+toY;
             nextX = s[0].getX()+toX;
             s[0].setYX(nextY,nextX);   
         }
-        // ë±€ì˜ ì´ë™
+        // ¹ìÀÇ ÀÌµ¿
         void move(Object**& m,Item& item, GateNWall& gnw)
         {
             setBodyPos();
             setHeadPos();
             
-            // ê¼¬ë¦¬ëŠ” ë¹ˆê³µê°„ìœ¼ë¡œ
+            // ²¿¸®´Â ºó°ø°£À¸·Î
             m[tailY][tailX]= Space(tailY,tailX); 
-            //ê·¸ë¦¬ê³  ê¼¬ë¦¬ ì¢Œí‘œ ë‹¤ì‹œ
+            //±×¸®°í ²¿¸® ÁÂÇ¥ ´Ù½Ã
             tailY = s[numBody-1].getY();
             tailX = s[numBody-1].getX();    
             
-            // ì›€ì§ì¸ ê³³ì— ë­”ê°€ ìˆì„ë•Œ,
+            // ¿òÁ÷ÀÎ °÷¿¡ ¹º°¡ ÀÖÀ»¶§,
             afterMove(m,item,gnw);            
             
-            //ë³€í™” ì—…ëƒ
+            //º¯È­ ¾÷µ«
             for (int i=0;i<numBody;i++)
             {
                 m[s[i].getY()][s[i].getX()]= s[i];
             }
         }
-        //ì´ë™í•œ ê³³ì— ë­”ê°€ ìˆëŠ” ê²½ìš°
+        //ÀÌµ¿ÇÑ °÷¿¡ ¹º°¡ ÀÖ´Â °æ¿ì
         void afterMove(Object**& m,Item& item,GateNWall& gnw)
         {
-             //ì•„ì´í…œ
+             //¾ÆÀÌÅÛ
             for (int i=0;i<item.numItem;i++)
             { 
                 Object obj = item.it[i];
-                if ((obj.getY()==s[0].getY())&&(obj.getX()==s[0].getX())) // ë¨¸ë¦¬ë‘ ì¢Œí‘œê°€ ê°™ìœ¼ë©´,
+                if ((obj.getY()==s[0].getY())&&(obj.getX()==s[0].getX())) // ¸Ó¸®¶û ÁÂÇ¥°¡ °°À¸¸é,
                 {   
-                     // ë²½ì— ë‹¿ì•˜ì„ ë•Œì˜ ê²½ìš°ë„ ë§Œë“¤ì–´ì•¼í•¨ **********************************************************************
-                    if (obj.getTN()==6)  //ë…ë¨¹ìœ¼ë©´ 
+                     // º®¿¡ ´ê¾ÒÀ» ¶§ÀÇ °æ¿ìµµ ¸¸µé¾î¾ßÇÔ **********************************************************************
+                    if (obj.getTN()==6)  //µ¶¸ÔÀ¸¸é 
                     {
                         popBody(m);
-                        item.eraseItem(obj.getY(),obj.getX()); // íŠ¹ì • ì•„ì´í…œ ì œê±°
+                        item.eraseItem(obj.getY(),obj.getX()); // Æ¯Á¤ ¾ÆÀÌÅÛ Á¦°Å
 
-                        // ëª¸í†µ ê¸¸ì´ê°€ 2ì´ë©´ ì¢…ë£Œ
+                        // ¸öÅë ±æÀÌ°¡ 2ÀÌ¸é Á¾·á
                         if (s.size() == 2){
                             fail();
                         }
 
                     }
-                    else if (obj.getTN()==7)  // ì‚¬ê³¼ë¨¹ìœ¼ë©´
+                    else if (obj.getTN()==7)  // »ç°ú¸ÔÀ¸¸é
                     {
                         pushBody(m);
                         item.eraseItem(obj.getY(),obj.getX());
                     }
                 }
             }
-            // ì•„ì´í…œì´ ì•„ë‹Œê²½ìš° 
-            Object obj = m[s[0].getY()][s[0].getX()];//ë±€ ë¨¸ë¦¬ì˜ í˜„ì¬ ìœ„ì¹˜ì— ìˆëŠ” ì˜¤ë¸Œì íŠ¸
-            if (obj.getTN()==8) // ì˜¤ë¸Œì íŠ¸ê°€ ê²Œì´íŠ¸ë¼ë©´ 
+            // ¾ÆÀÌÅÛÀÌ ¾Æ´Ñ°æ¿ì 
+            Object obj = m[s[0].getY()][s[0].getX()];//¹ì ¸Ó¸®ÀÇ ÇöÀç À§Ä¡¿¡ ÀÖ´Â ¿ÀºêÁ§Æ®
+            if (obj.getTN()==8) // ¿ÀºêÁ§Æ®°¡ °ÔÀÌÆ®¶ó¸é 
             {
                 setOnGate(); 
 
-                if (obj.getY() == gnw.gate1.getY() && obj.getX() == gnw.gate1.getX()) //ì˜¤ë¸Œì íŠ¸ê°€ ê²Œì´íŠ¸1 ì¼ë•Œ  ê²Œì´íŠ¸ 2ë¡œë‚˜ì˜´
+                if (obj.getY() == gnw.gate1.getY() && obj.getX() == gnw.gate1.getX()) //¿ÀºêÁ§Æ®°¡ °ÔÀÌÆ®1 ÀÏ¶§  °ÔÀÌÆ® 2·Î³ª¿È
                 {
                     gateUse++;
                     gnw.setExit(m,gnw.gate2,toY,toX);
                     s[0].setYX(gnw.gate2.getY()+toY,gnw.gate2.getX()+toX);
                 }
-                else //ì˜¤ë¸Œì íŠ¸ê°€ ê²Œì´íŠ¸ 2ì¼ë•Œ
+                else //¿ÀºêÁ§Æ®°¡ °ÔÀÌÆ® 2ÀÏ¶§
                 {
                     gateUse++;
                     gnw.setExit(m,gnw.gate1,toY,toX);
                     s[0].setYX(gnw.gate1.getY()+toY,gnw.gate1.getX()+toX);
                 }
             }
-            else if (obj.getTN()==2 ||obj.getTN()==4) // ë²½ì— ë‹¿ê±°ë‚˜ ëª¸í†µì— ë‹¿ì•˜ì„ ë•Œ ì‹¤íŒ¨
+            else if (obj.getTN()==2 ||obj.getTN()==4) // º®¿¡ ´ê°Å³ª ¸öÅë¿¡ ´ê¾ÒÀ» ¶§ ½ÇÆĞ
             {
                 fail();
             }
