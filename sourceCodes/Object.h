@@ -1,7 +1,7 @@
 #ifndef __OBJ__
 #define __OBJ__
 
-// °¢ ¿ÀºêÁ§Æ®ÀÇ ¼Ó¼ºÀ» ´ã´Â ºÎ¸ğ Å¬·¡½º (È­¸é¿¡ Ç¥½ÃµÈ Á¤»ç°¢Çü ÇÏ³ªÇÏ³ª°¡ ¿ÀºêÁ§Æ®ÀÓ)
+// ê° ì˜¤ë¸Œì íŠ¸ì˜ ì†ì„±ì„ ë‹´ëŠ” ë¶€ëª¨ í´ë˜ìŠ¤ (í™”ë©´ì— í‘œì‹œëœ ì •ì‚¬ê°í˜• í•˜ë‚˜í•˜ë‚˜ê°€ ì˜¤ë¸Œì íŠ¸ì„)
 class Object
 {
     protected:
@@ -13,80 +13,72 @@ class Object
         Object(int y=0, int x=0, int tn = 0):x(x), y(y) , typeNum(tn){}
         virtual ~Object(){}
         
+        //ì¢Œí‘œê°’ ì–»ê¸°
         int getY() {return y;}
         int getX() {return x;}
         void setYX(int y,int x){this->y=y;this->x=x;}
-
+        //íƒ€ì…ë„˜ë²„ ì–»ê¸°
         int getTN(){return typeNum;}
-
+        //íƒ€ì…ë„˜ë²„ ì„¸íŒ…
         void setTN(int typeNum) {this->typeNum = typeNum;}
 
 };
-// ºó°ø°£
+// ë¹ˆê³µê°„
 class Space :public Object
 {
     public:
         Space (int y, int x):Object(y,x,1){}
-
         ~Space(){}
 };
-// ÀÏ¹İº®
+// ì¼ë°˜ë²½
 class NormalWall : public Object
 {
     public:
         bool isGate=false;
         NormalWall (int y, int x):Object(y,x,2){}
-
         ~NormalWall(){}
 
 };
-// µıµıº®
+// ë”´ë”´ë²½
 class ImmueWall : public Object
 {
     public:
         ImmueWall (int y, int x):Object(y,x,3){}
-
         ~ImmueWall(){}
 };
-// ¹ì ¸öÅë
+// ë±€ ëª¸í†µ
 class Body: public Object
 {
     public:
         Body (int y, int x):Object(y,x,4){}
-
         ~Body(){}
 };
-// ¹ì ¸Ó¸®
+// ë±€ ë¨¸ë¦¬
 class Head : public Object
 {     
     public:
         Head (int y, int x):Object(y,x,5){}
-
         ~Head(){}
 };
-// µ¶
+// ë…
 class Poison : public Object
 {
     public:
         Poison (int y, int x):Object(y,x,6){}
-
         ~Poison(){}
 };
-// »ç°ú
+// ì‚¬ê³¼
 class Apple : public Object
 {
     public:
         Apple (int y, int x):Object(y,x,7){}
-
         ~Apple(){}
 };
-//°ÔÀÌÆ®
+//ê²Œì´íŠ¸
 class Gate: public Object
 {
     public:
         Gate (int y, int x):Object(y,x,8){}
-
         ~Gate(){}
 };
-
 #endif

@@ -1,57 +1,25 @@
 #include "Object.h"
 
 
-//--------------------------¸Ê Å¬·¡½º ------------------------------
+//--------------------------ë§µ í´ë˜ìŠ¤ ------------------------------
 class Map
 {
-    int width;
-    int height;
+        int width;
+        int height;
     
     friend class Snake;
 
     public:
         Object** m;
 
-        Map(int w=30,int h=24): width(w), height(h)
-        {
-            // ÁÂÇ¥ Çü¼º
-            m = new Object*[height];
-            for (int i=0;i<height;i++){m[i]= new Object[width];}
-            // ÀÏ´Ü º®°ú ºó°ø°£À¸·Î ÃÊ±âÈ­
-            for (int j=0;j<height;j++){
-                for (int i=0;i<width;i++)
-                {
-                    if (j==0 || j==(height-1) ||i==0|| i==(width-1)) { m[j][i] =NormalWall(j,i);}
-                    else {m[j][i] = Space(j,i);} 
-                }
-            }
-            // ²ÀÁöÁ¡Àº µıµıº®À¸·Î 
-            m[0][width-1]=ImmueWall(0,width-1);
-            m[0][0] = ImmueWall(0,0);
-            m[height-1][0] = ImmueWall(height-1,0);
-            m[height-1][width-1] = ImmueWall(height-1,width-1);
-            
-        }
-
+        //ìƒì„±ì
+        Map(int w,int h);
+        //ê²Œí„°
         int getHeight(){return height;}
         int getWidth(){return width;}
 
-        // °¡·Î º® »ı¼º
-        void makeHorizontal(int height)
-        {
-            for(int i = 4; i < width-4; i++)
-            {
-                if(m[height][i].getTN()==2) m[height][i] = ImmueWall(height, i);
-                else m[height][i] = NormalWall(height, i);
-            }
-        }
-        // ¼¼·Î º® »ı¼º 
-        void makeVertical(int width)
-        {
-            for(int i = 4; i < height-4; i++)
-            {
-                if(m[i][width].getTN()==2) m[i][width] = ImmueWall(i, width);
-                else m[i][width] = NormalWall(i, width);
-            }
-        }
+        // ê°€ë¡œ ë²½ ìƒì„±
+        void makeHorizontal(int height);
+        // ì„¸ë¡œ ë²½ ìƒì„± 
+        void makeVertical(int width);
 };

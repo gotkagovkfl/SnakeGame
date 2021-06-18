@@ -10,7 +10,7 @@ extern int mapHeight;
 extern int gateUse;
 extern void fail();
 
-//----------------------¹ì Å¬·¡½º------------------------------ 
+//----------------------ë±€ í´ë˜ìŠ¤------------------------------ 
 class Snake
 {
     int toX=-1;
@@ -23,152 +23,33 @@ class Snake
         int  tailY, tailX;
         vector <Object> s;
         
-        Snake(Object**& m,int h=30,int w=24) : tailY(h/2), tailX(w/2)
-        {
-            //Ã³À½¿¡ ±æÀÌ°¡ 3ÀÎ ¹ì »ı¼º
-            Head head(tailY,tailX);
-            m[tailY][tailX]= head;
-            s.push_back(head);
-            Body body(tailY,++tailX);
-            m[tailY][tailX]= body;
-            s.push_back(body);
+        //ìƒì„±ì
+        Snake(Object**& m,int h,int w);
 
-            pushBody(m);
-        }
-
-        void Init(Object**& m)
-        {
-            while(numBody > 3) popBody(m);
-            m[s[0].getY()][s[0].getX()].setTN(1);
-            m[s[1].getY()][s[1].getX()].setTN(1);
-            m[s[2].getY()][s[2].getX()].setTN(1);
-
-            toY=0;
-            toX=-1;
-
-            s[0].setYX(mapWidth/2, mapHeight/2);
-            s[1].setYX(mapWidth/2, mapHeight/2 + 1);
-            s[2].setYX(mapWidth/2, mapHeight/2 + 1);
-        }
-
+        // ë¨¸ë¦¬ë°©í–¥ì¡°ì ˆ
         void setToY(int y){toY=y;}
         void setToX(int x){toX=x;}
-
-        //°ÔÀÌÆ® Åë°úÁßÀÓÀ» ³ªÅ¸³»´Â »óÅÂº¯¼ö Á¶Á¤
-        void setOnGate(){onGate=numBody;}
-        void decreaseOnGate(){if(onGate){onGate--;}}
-        
+        //ë¨¸ë¦¬ ë°©í–¥ ê°’ ì–»ê¸°
         int getToY(){return toY;}
         int getToX(){return toX;}
-        //¹ì ¸öÅë »ı¼º
-        void pushBody(Object**& m)
-        {
-            //¸ğ¼­¸®¿¡¼­ »ı¼º½Ã °¡²û º® ¶Õ´Â Çö»ó ÇØ°áÇØ¾ßÇÔ **********************************¿©±â¼­
-            int chaiY = s[numBody-1].getY()-s[numBody-2].getY();
-            int chaiX = s[numBody-1].getX()-s[numBody-2].getX();
-            tailY += chaiY;
-            tailX += chaiX;
-            Body tail(tailY,tailX);
-            m[tailY][tailX] = tail;
 
-            s.push_back(tail);
-            numBody++;
-        }
-        //¹ì ¸öÅë Á¦°Å
-        void popBody(Object**& m)
-        {
-            m[s[numBody-1].getY()][s[numBody-1].getX()] = Space(s[numBody-1].getY(),s[numBody-1].getX());
-            s.pop_back();
-            numBody--;
-            tailY = s[numBody-1].getY();
-            tailX = s[numBody-1].getX();
-        }
-        // ¹ìÀÇ ¸öÅë À§Ä¡ ¼³Á¤(¹Ù·Î¾ÕÀÇ ¸öÅëÀÇ À§Ä¡·Î ÀÌµ¿ÇÔ) (¸Ó¸®´Â Á¦¿Ü)
-        void setBodyPos()
-        {
-            for (int i=numBody-1; i>0; i--)
-            {
-                s[i].setYX(s[i-1].getY(),s[i-1].getX());
-            }
-        }
-        //¸Ó¸®À§Ä¡¼³Á¤(next°ªÀ» ¼³Á¤ÇÏ°í ±× °ªÀ¸·Î ÀÌµ¿)
-        void setHeadPos()
-        {
-            nextY = s[0].getY()+toY;
-            nextX = s[0].getX()+toX;
-            s[0].setYX(nextY,nextX);   
-        }
-        // ¹ìÀÇ ÀÌµ¿
-        void move(Object**& m,Item& item, GateNWall& gnw)
-        {
-            setBodyPos();
-            setHeadPos();
-            
-            // ²¿¸®´Â ºó°ø°£À¸·Î
-            m[tailY][tailX]= Space(tailY,tailX); 
-            //±×¸®°í ²¿¸® ÁÂÇ¥ ´Ù½Ã
-            tailY = s[numBody-1].getY();
-            tailX = s[numBody-1].getX();    
-            
-            // ¿òÁ÷ÀÎ °÷¿¡ ¹º°¡ ÀÖÀ»¶§,
-            afterMove(m,item,gnw);            
-            
-            //º¯È­ ¾÷µ«
-            for (int i=0;i<numBody;i++)
-            {
-                m[s[i].getY()][s[i].getX()]= s[i];
-            }
-        }
-        //ÀÌµ¿ÇÑ °÷¿¡ ¹º°¡ ÀÖ´Â °æ¿ì
-        void afterMove(Object**& m,Item& item,GateNWall& gnw)
-        {
-             //¾ÆÀÌÅÛ
-            for (int i=0;i<item.numItem;i++)
-            { 
-                Object obj = item.it[i];
-                if ((obj.getY()==s[0].getY())&&(obj.getX()==s[0].getX())) // ¸Ó¸®¶û ÁÂÇ¥°¡ °°À¸¸é,
-                {   
-                     // º®¿¡ ´ê¾ÒÀ» ¶§ÀÇ °æ¿ìµµ ¸¸µé¾î¾ßÇÔ **********************************************************************
-                    if (obj.getTN()==6)  //µ¶¸ÔÀ¸¸é 
-                    {
-                        popBody(m);
-                        item.eraseItem(obj.getY(),obj.getX()); // Æ¯Á¤ ¾ÆÀÌÅÛ Á¦°Å
+        //ê²Œì´íŠ¸ í†µê³¼ì¤‘ì„ì„ ë‚˜íƒ€ë‚´ëŠ” ìƒíƒœë³€ìˆ˜ ì¡°ì •
+        void setOnGate(){onGate=numBody;}
+        void decreaseOnGate(){if(onGate){onGate--;}}
 
-                        // ¸öÅë ±æÀÌ°¡ 2ÀÌ¸é Á¾·á
-                        if (s.size() == 2){
-                            fail();
-                        }
+        //ë§µì „í™˜ì‹œ ë±€ì˜ ìœ„ì¹˜ ì´ˆê¸°í™”
+        void Init(Object**& m);
 
-                    }
-                    else if (obj.getTN()==7)  // »ç°ú¸ÔÀ¸¸é
-                    {
-                        pushBody(m);
-                        item.eraseItem(obj.getY(),obj.getX());
-                    }
-                }
-            }
-            // ¾ÆÀÌÅÛÀÌ ¾Æ´Ñ°æ¿ì 
-            Object obj = m[s[0].getY()][s[0].getX()];//¹ì ¸Ó¸®ÀÇ ÇöÀç À§Ä¡¿¡ ÀÖ´Â ¿ÀºêÁ§Æ®
-            if (obj.getTN()==8) // ¿ÀºêÁ§Æ®°¡ °ÔÀÌÆ®¶ó¸é 
-            {
-                setOnGate(); 
-
-                if (obj.getY() == gnw.gate1.getY() && obj.getX() == gnw.gate1.getX()) //¿ÀºêÁ§Æ®°¡ °ÔÀÌÆ®1 ÀÏ¶§  °ÔÀÌÆ® 2·Î³ª¿È
-                {
-                    gateUse++;
-                    gnw.setExit(m,gnw.gate2,toY,toX);
-                    s[0].setYX(gnw.gate2.getY()+toY,gnw.gate2.getX()+toX);
-                }
-                else //¿ÀºêÁ§Æ®°¡ °ÔÀÌÆ® 2ÀÏ¶§
-                {
-                    gateUse++;
-                    gnw.setExit(m,gnw.gate1,toY,toX);
-                    s[0].setYX(gnw.gate1.getY()+toY,gnw.gate1.getX()+toX);
-                }
-            }
-            else if (obj.getTN()==2 ||obj.getTN()==4) // º®¿¡ ´ê°Å³ª ¸öÅë¿¡ ´ê¾ÒÀ» ¶§ ½ÇÆĞ
-            {
-                fail();
-            }
-        }
+        //ë±€ ëª¸í†µ ìƒì„±
+        void pushBody(Object**& m);
+        //ë±€ ëª¸í†µ ì œê±°
+        void popBody(Object**& m);
+        // ë±€ì˜ ëª¸í†µ ìœ„ì¹˜ ì„¤ì •(ë°”ë¡œì•ì˜ ëª¸í†µì˜ ìœ„ì¹˜ë¡œ ì´ë™í•¨) (ë¨¸ë¦¬ëŠ” ì œì™¸)
+        void setBodyPos();
+        //ë¨¸ë¦¬ìœ„ì¹˜ì„¤ì •(nextê°’ì„ ì„¤ì •í•˜ê³  ê·¸ ê°’ìœ¼ë¡œ ì´ë™)
+        void setHeadPos();
+        // ë±€ì˜ ì´ë™
+        void move(Object**& m,Item& item, GateNWall& gnw);
+        //ì´ë™í•œ ê³³ì— ë­”ê°€ ìˆëŠ” ê²½ìš°
+        void afterMove(Object**& m,Item& item,GateNWall& gnw);
 };

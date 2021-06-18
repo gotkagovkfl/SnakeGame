@@ -2,11 +2,12 @@
 #define __GATE__
 
 #include <vector>
+
 #include "Object.h"
 
 using namespace std;
 
-//---------°ÔÀÌÆ® Å¬·¡½º------------ 
+//---------ê²Œì´íŠ¸ í´ë˜ìŠ¤------------ 
 class GateNWall
 {
     protected:
@@ -18,107 +19,22 @@ class GateNWall
         Object gate2;
         bool gateOpen=false; 
 
-        //Ãâ±¸¸¦ ±¸ÇÏ±â À§ÇÑ º¯¼öµé
+        //ì¶œêµ¬ë¥¼ êµ¬í•˜ê¸° ìœ„í•œ ë³€ìˆ˜ë“¤
         int exitOfGate[4][2] ={{-1,0},{0,1},{1,0},{0,-1}};
         int idxForFind=0;
 
-        vector <Object> walls; //º®À» ´ã´Â º¤ÅÍ 
+        vector <Object> walls; //ë²½ì„ ë‹´ëŠ” ë²¡í„° 
 
-        //»ı¼ºÀÚ
-        GateNWall(Object**& m ,int h=30, int w= 24):height(h),width(w)
-        {
-            fillWalls(m);
-            selectGate(m);
-            // debugging(m);
-        }
-        // walls º¤ÅÍ¸¦ ¸Ê¿¡¼­ ÀÏ¹İ º®ÀÎ ¿ÀºêÁ§Æ®·Î Ã¤¿ò
-        void fillWalls(Object**& m)
-        {
-            walls.clear();
-            
-            for (int j=0;j<height;j++){
-                for (int i=0;i<width;i++)
-                {
-                    if (m[j][i].getTN()==2){walls.push_back(m[j][i]);}
-                }
-            }
-        }
-        // //for debugging
-        // void debugging(Object**& m)
-        // {
-        //     gate1 = Gate(0,5);
-        //     gate2 = Gate(0,6);
-        //     m[0][5]=gate1;
-        //     m[0][6]=gate2;
-        // }
-        //°ÔÀÌÆ® ¼±ÅÃ
-        void selectGate(Object** & m)
-        {
-            //¸ÕÀú ÇöÀç °ÔÀÌÆ®´Â º®À¸·Î º¹±¸
-            restore(m);
-             // °ÔÀÌÆ®ÀÇ ÀÎµ¦½º »Ì±â (2°³)
-            int randIdx1,randIdx2;
-            do
-            {
-                srand((unsigned int)time(NULL));
-                randIdx1=rand()%(walls.size());
-                srand((unsigned int)time(NULL)*-1);
-                randIdx2=rand()%(walls.size());
-            } 
-            while (randIdx1==randIdx2);
-            
-            Object temp1 = walls[randIdx1];
-            Object temp2 = walls[randIdx2];
-
-            m[temp1.getY()][temp1.getX()] = Gate(temp1.getY(),temp1.getX());
-            m[temp2.getY()][temp2.getX()] = Gate(temp2.getY(),temp2.getX());
-
-            gate1 = m[temp1.getY()][temp1.getX()];
-            gate2 = m[temp2.getY()][temp2.getX()];
-
-            gateOpen=true;
-
-            // walls[randIdx1]= 
-        }
-        //°ÔÀÌÆ® µÇµ¹¸®±â
-        void restore(Object**& m)
-        {
-            if (gateOpen)
-            {
-                m[gate1.getY()][gate1.getX()] = NormalWall(gate1.getY(),gate1.getX());
-                m[gate2.getY()][gate2.getX()] = NormalWall(gate2.getY(),gate2.getX());
-            }
-        }
-        //°ÔÀÌÆ® Ãâ±¸ ÁÂÇ¥±¸ÇÏ±â
-        void setExit(Object**& m,Object& g,int& toY,int& toX)
-        {
-            int tempY;
-            int tempX;
-            // ¿øÇü ¸®½ºÆ®ÀÇ ½ÃÀÛ ÀÎµ¦½º ±¸ÇÏ±â
-            for(int i=0;i<4;i++)
-            {
-                if (exitOfGate[i][0]== false && exitOfGate[i][1]) {idxForFind=i;break;} 
-            }
-
-             //½Ã°è¹æÇâÀ¸·Î Å½»ö
-            for (int i=0;i<4;i++)
-            {
-                tempY= g.getY()+exitOfGate[idxForFind][0],  
-                tempX= g.getX()+exitOfGate[idxForFind][1]; // ÇöÀç °ÔÀÌÆ®ÀÇ À§Ä¡¿¡¼­ ½Ã°è¹æÇâÀ¸·Î Ã£±â
-				// ÇØ´çÁÂÇ¥°¡ ºó°ø°£ÀÌ¶ó¸é, °ÔÀÌÆ®ÀÇ Ãâ±¸ÀÓ
-                if (0<=tempY &&tempY<height&& 0<tempX &&tempX< width) // ½Ã°è¹æÇâÀ¸·Î È®ÀÎÇÏ´Â ÁÂÇ¥°¡ ¸Ê ¹ÛÀÌ ¾Æ´Ï¾î¾ßÇÔ
-                {
-                    if (m[tempY][tempX].getTN()==1){break;}   //¸¸¾à Ãâ±¸°ÔÀÌÆ®ÀÇ »ç¹æÀÌ º®À¸·Î ¸·ÇôÀÖÀ¸¸é Á×À½
-                }
-                ++idxForFind%=4;
-            }
-            int retToY = exitOfGate[idxForFind][0];
-            int retToX = exitOfGate[idxForFind][1];
-
-            toY=retToY;
-            toX=retToX;
-        }
-
+        //ìƒì„±ì
+        GateNWall(Object**& m ,int h, int w);
+        // walls ë²¡í„°ë¥¼ ë§µì—ì„œ ì¼ë°˜ ë²½ì¸ ì˜¤ë¸Œì íŠ¸ë¡œ ì±„ì›€
+        void fillWalls(Object**& m);
+        //ê²Œì´íŠ¸ ì„ íƒ
+        void selectGate(Object** & m);
+        //ê²Œì´íŠ¸ ë˜ëŒë¦¬ê¸°
+        void restore(Object**& m);
+        //ê²Œì´íŠ¸ ì¶œêµ¬ ì¢Œí‘œêµ¬í•˜ê¸°
+        void setExit(Object**& m,Object& g,int& toY,int& toX);
 };
 
 #endif

@@ -8,7 +8,7 @@
 
 using namespace std;
 
-//-----------------------¾ÆÀÌÅÛ Å¬·¡½º---------------- 
+//-----------------------ì•„ì´í…œ í´ë˜ìŠ¤---------------- 
 class Item
 {
     protected:
@@ -18,59 +18,16 @@ class Item
         int numItem=0;
         vector <Object> it;
 
-        Item(Object**& m, int h = 30, int w = 24): height(h), width(w) { }
+        Item(Object**& m, int h, int w): height(h), width(w) { }
 
-        //ÃÊ±âÈ­ ÇÔ¼ö
-        void Init(Object**& m)
-        {
-            while(numItem > 0) popItem(m);
-        }
-        // ¾ÆÀÌÅÛ »ı¼º (½Ã°£¸¶´Ù)
-        void pushItem(Object**& m)
-        {
-             //·£´ı y,x°ª ÃßÃâ (ºó°ø°£ÀÌ¾î¾ßÇÔ ) ·¢°É¸®¸é ¿©±â¼­ whileµµ´À¶ó ±×·±°Å
-            int randY, randX;
-            do
-            {
-                srand((unsigned int)time(NULL));
-                randY=rand()%(height-2)+1;
-                randX=rand()%(width-2)+1;
-            } while (m[randY][randX].getTN() != 1); // ºó°ø°£À» Ã£À»¶§±îÁö 
-            
-            //µ¶ ÀÏÁö »ç°úÀÏÁö Á¤ÇÔ
-			srand(time(NULL));
-            int n = rand()%2; //50 %È®·ü
-            //±×¸®°í ¾ÆÀÌÅÛ ¸¸µé¾î¼­
-            Object item;
-            if (n) {item = Apple(randY,randX);}
-            else {item = Poison(randY,randX);}
-            //º¤ÅÍ¿¡ »ğÀÔ
-            it.insert(it.begin(),item); 
-            m[randY][randX] = item;
-            numItem++;
-        }
-        // °¡Àå ¿À·¡µÈ ¾ÆÀÌÅÛ Á¦°Å (½Ã°£ ÃÊ°ú, ½ºÅ×ÀÌÁö Å¬¸®¾î ½Ã)
-        void popItem(Object**& m)
-        {
-            Object item = it[numItem-1];
-            it.pop_back();
-            m[item.getY()][item.getX()]=Space(item.getY(),item.getX());
-            numItem--;
-        }
-        // Æ¯Á¤ ¾ÆÀÌÅÛ Á¦°Å  (¹ì°ú Á¢ÃË½Ã)
-        void eraseItem(int y,int x)
-        {
-            for (int i=0;i<numItem;i++)
-            {
-                if (it[i].getY()==y&&it[i].getX()==x)
-                {
-                    Object temp = it[i];
-                    it.erase(it.begin()+i);
-                    numItem--;
-                }
-            }
-            
-        }
+        //ì´ˆê¸°í™” í•¨ìˆ˜
+        void Init(Object**& m){while(numItem > 0) popItem(m);}
+        // ì•„ì´í…œ ìƒì„± (ì‹œê°„ë§ˆë‹¤)
+        void pushItem(Object**& m);
+        // ê°€ì¥ ì˜¤ë˜ëœ ì•„ì´í…œ ì œê±° (ì‹œê°„ ì´ˆê³¼, ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´ ì‹œ)
+        void popItem(Object**& m);
+        // íŠ¹ì • ì•„ì´í…œ ì œê±°  (ë±€ê³¼ ì ‘ì´‰ì‹œ)
+        void eraseItem(int y,int x);
 };
 
 #endif

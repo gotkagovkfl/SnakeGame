@@ -12,16 +12,16 @@
 using namespace std;
 
 //
-bool play= true; //°ÔÀÓ Á¾·á ÇÃ·¡±×
+bool play= true; //ê²Œì„ ì¢…ë£Œ í”Œë˜ê·¸
 bool gameClear = false;
-void fail(){play=false;} // °ÔÀÓ Á¾·á ÇÔ¼ö
+void fail(){play=false;} // ê²Œì„ ì¢…ë£Œ í•¨ìˆ˜
 
 int mapWidth;
 int mapHeight;
 int gateUse = 0;
 
-//----------------¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ--------Àü¿ªÇÔ¼ö----------------------- 
-// °ÔÀÓ¿À¹öÈ­¸é
+//----------------ã…¡ã…¡ã…¡ã…¡ã…¡ã…¡ã…¡ã…¡ã…¡ã…¡ã…¡ã…¡ã…¡ã…¡ã…¡--------ì „ì—­í•¨ìˆ˜----------------------- 
+// ê²Œì„ì˜¤ë²„í™”ë©´
 void gameover()
 {
     clear();
@@ -43,7 +43,7 @@ void gameover()
     endwin();
     fail();
 }
-// Å¬¸®¾îÈ­¸é
+// í´ë¦¬ì–´í™”ë©´
 void GameClear()
 {
     clear();
@@ -136,14 +136,14 @@ void GameClear()
     
     napms(2000);
     endwin();
-    fail(); //È­¸é Á¾·á¸¦ À§ÇÔ
+    fail(); //í™”ë©´ ì¢…ë£Œë¥¼ ìœ„í•¨
 }
 
-//½ÃÀÛ´ë±âÈ­¸é
+//ì‹œì‘ëŒ€ê¸°í™”ë©´
 void startScreen()
 {
     start_color();
-    // ÃÊ±âÈ­¸é
+    // ì´ˆê¸°í™”ë©´
     int x = 4;
     int y = 10;
 
@@ -153,10 +153,10 @@ void startScreen()
     mvprintw(12, b+8, "M");
     mvprintw(12, b+12, "E");
 
-    init_color(14,1000,700,0 ); // ¸ö»ö (³ë¶õ»ö)
-    init_color(15, 1000, 400,0); // ¸Ó¸®»ö (¿À·»Áö)
-    init_pair(4, 14, 14); //¹ì ¸öÅë »ö
-    init_pair(5,  15, 15); // ¹ì ¸Ó¸® »ö
+    init_color(14,1000,700,0 ); // ëª¸ìƒ‰ (ë…¸ë€ìƒ‰)
+    init_color(15, 1000, 400,0); // ë¨¸ë¦¬ìƒ‰ (ì˜¤ë Œì§€)
+    init_pair(4, 14, 14); //ë±€ ëª¸í†µ ìƒ‰
+    init_pair(5,  15, 15); // ë±€ ë¨¸ë¦¬ ìƒ‰
     //s
     attron(COLOR_PAIR(5));
     mvprintw(x+0, y+2, "00");
@@ -256,7 +256,7 @@ void startScreen()
     mvprintw(17, 32, "press 's' key");
 
 
-    // °× ½ÃÀÛ
+    // ê²œ ì‹œì‘
     while(1){
         int input = getch();
         
@@ -266,7 +266,7 @@ void startScreen()
     clear();
 }
 
-//¸Ê ±×·¡ÇÈ »ı¼º 
+//ë§µ ê·¸ë˜í”½ ìƒì„± 
 void mapUpdate(Object** m, int h, int w)
 {
     clear();
@@ -275,25 +275,25 @@ void mapUpdate(Object** m, int h, int w)
         for(int i = 0; i < w; i++)
         {
             int objType= m[j][i].getTN();
-            attrset(COLOR_PAIR(objType)); //Å¸ÀÔ¿¡ ¸Â°Ô »öÄ¥ÇÔ
+            attrset(COLOR_PAIR(objType)); //íƒ€ì…ì— ë§ê²Œ ìƒ‰ì¹ í•¨
             mvprintw(j, i*2, "00");
         }
     }
     refresh();
 }
 
-// ½Ã°£ÀÇ Èå¸§             // ·¹ÆÛ·±½º Àü´Ş½Ã ÄÄÆÄÀÏ¿¡·¯
+// ì‹œê°„ì˜ íë¦„             // ë ˆí¼ëŸ°ìŠ¤ ì „ë‹¬ì‹œ ì»´íŒŒì¼ì—ëŸ¬
 void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
 {
     for(int a=0;a <5; a++)
     {
-        //»óÅÂÃ¢ (½ºÅ×ÀÌÁö¸¶´Ù »óÅÂÃ¢À» »õ·Î ¾¸)
+        //ìƒíƒœì°½ (ìŠ¤í…Œì´ì§€ë§ˆë‹¤ ìƒíƒœì°½ì„ ìƒˆë¡œ ì”€)
         WINDOW *win;
         win = newwin(map->getHeight(),30,0,map->getWidth()*2);
         wbkgd(win, COLOR_PAIR(10));
         box(win, 0,0);
 
-        wattron(win,A_BOLD); // Á¦¸ñ °­Á¶
+        wattron(win,A_BOLD); // ì œëª© ê°•ì¡°
         mvwprintw(win, 1,2, "SNAKE GAME");
         wattroff(win,A_BOLD);
         mvwprintw(win, 4,2, "STATUS:");
@@ -308,13 +308,13 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
         wattroff(win,COLOR_PAIR(7));
         
         double time =0;
-        int tick= 100;  //¸îÃÊ¸¶´Ù È­¸é °»½Å (¹ì ÀÌµ¿ )ÇÒÁö Á¤ÇÔ-  ´ÜÀ§ ms 
-        int initItemCD = 4000; // ¾ÆÀÌÅÛÀÌ ³ª¿À´Â ½Ã°£- ´ÜÀ§ ms
+        int tick= 100;  //ëª‡ì´ˆë§ˆë‹¤ í™”ë©´ ê°±ì‹  (ë±€ ì´ë™ )í• ì§€ ì •í•¨-  ë‹¨ìœ„ ms 
+        int initItemCD = 4000; // ì•„ì´í…œì´ ë‚˜ì˜¤ëŠ” ì‹œê°„- ë‹¨ìœ„ ms
         int initGateCD = 10000;
         double ItemCD = 0;
         double GateCD = 0;
 
-        // ½ºÅ×ÀÌÁö º°·Î ¹ì À§Ä¡ Á¶Á¤
+        // ìŠ¤í…Œì´ì§€ ë³„ë¡œ ë±€ ìœ„ì¹˜ ì¡°ì •
         if(a > 0)
         {
             s->Init(map->m);
@@ -323,11 +323,11 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
         if(score->stageNum == 2) {map->makeVertical(mapWidth/2  + 6); g->fillWalls(map->m);}
         else if(score->stageNum == 3) {map->makeHorizontal(mapHeight/2 - 6);g->fillWalls(map->m);}
         else if(score->stageNum == 4) {map->makeVertical(mapHeight/2 - 6);g->fillWalls(map->m);}
-        //½Ã°£ Èå¸§ 
+        //ì‹œê°„ íë¦„ 
         do {
             box(win, 0,0);
 
-            wattron(win,A_BOLD); // Á¦¸ñ °­Á¶
+            wattron(win,A_BOLD); // ì œëª© ê°•ì¡°
             mvwprintw(win, 1,2, "SNAKE GAME");
             wattroff(win,A_BOLD);
             mvwprintw(win, 4,2, "STATUS:");
@@ -335,32 +335,32 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
             mvwprintw(win, 10,2, "num of items : %d     ",i->numItem);
             // wclear(stdscr);
 
-            //ItemCD°¡ 0ÀÌ µÉ¶§¸¶´Ù ¾ÆÀÌÅÛ »ı¼º 
+            //ItemCDê°€ 0ì´ ë ë•Œë§ˆë‹¤ ì•„ì´í…œ ìƒì„± 
             if (ItemCD==0)  
             {
-                if (time >=initItemCD*0.003 && i->numItem >=3) // µ¿½Ã¿¡ 3°³¸¸ À¯ÁöÇÒ¼öÀÖµµ·Ï. ±Ùµ¥ °¡²û¾¿ 4°³µÊ. ÇØ°á ÇÊ¿ä ****************************** 
+                if (time >=initItemCD*0.003 && i->numItem >=3) // ë™ì‹œì— 3ê°œë§Œ ìœ ì§€í• ìˆ˜ìˆë„ë¡. ê·¼ë° ê°€ë”ì”© 4ê°œë¨. í•´ê²° í•„ìš” ****************************** 
                 {
                     i->popItem(map->m);
                 }
                 i->pushItem(map->m);
                 ItemCD=initItemCD;
             }
-            // GateCD°¡ 0ÀÌ µÉ¶§¸¶´Ù °ÔÀÌÆ® »ı¼º
+            // GateCDê°€ 0ì´ ë ë•Œë§ˆë‹¤ ê²Œì´íŠ¸ ìƒì„±
             s->decreaseOnGate();
             if (GateCD==0)
             {
-                if (s->onGate==0){g->selectGate(map->m);} //°ÔÀÌÆ® »ı¼º
+                if (s->onGate==0){g->selectGate(map->m);} //ê²Œì´íŠ¸ ìƒì„±
 
                 GateCD=initGateCD;
 
-                // mvwprintw(win, 11,2, "(%d,%d)  ,  (%d,%d)   ",g->gate1.getY(),g->gate1.getX(),g->gate2.getY(),g->gate2.getX()); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å»ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿
+                // mvwprintw(win, 11,2, "(%d,%d)  ,  (%d,%d)   ",g->gate1.getY(),g->gate1.getX(),g->gate2.getY(),g->gate2.getX()); //å ì™ì˜™å ì™ì˜™å ì™ì˜™ å ì™ì˜™íƒˆå ì™ì˜™ì¹˜ å ì™ì˜™å 
             }
             
-            // ¹ì ¿òÁ÷ÀÓ ¾÷µ¥ÀÌÆ®
+            // ë±€ ì›€ì§ì„ ì—…ë°ì´íŠ¸
             s->move(map->m,*i,*g);
             mapUpdate(map->m,mapHeight,mapWidth);
 
-            // Á¡¼ö¾÷µ¥ÀÌÆ®
+            // ì ìˆ˜ì—…ë°ì´íŠ¸
             if(score->stageNum == 1) mvwprintw(win, 7,2, "SCORE: %d/3     ",s->numBody-3);
             else if(score->stageNum == 2) mvwprintw(win, 7,2, "SCORE: %d/5     ",s->numBody-3);
             else if(score->stageNum == 3) mvwprintw(win, 7,2, "SCORE: %d/7     ",s->numBody-3);
@@ -369,13 +369,13 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
             score->scoreBodyLen = s->numBody-3;
             
 
-            // ½Ã°£ ¾÷µ¥ÀÌÆ®
+            // ì‹œê°„ ì—…ë°ì´íŠ¸
             mvwprintw(win, 9,2, "TIME: %1.1f sec  ",time);
             mvwprintw(win, 10,2, "num of items : %d     ",i->numItem);
             time+=tick*0.001;
             wrefresh(win);
 
-            napms(tick); //sleep°ú °°Àº ±â´É
+            napms(tick); //sleepê³¼ ê°™ì€ ê¸°ëŠ¥
             ItemCD-=tick;
             GateCD-=tick;
 
@@ -402,7 +402,7 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
     if(play==false) gameover();
     if(gameClear) GameClear();
 }
-// ¸ÊÅ©±â ¼±ÅÃ
+// ë§µí¬ê¸° ì„ íƒ
 void selectMapSize()
 {
     mvprintw(3, 8, "select map size number and press number key");
@@ -434,34 +434,34 @@ void selectMapSize()
     clear();
 }
 
-// »ç¿ëÇÒ »ö±ò ÃÊ±âÈ­
+// ì‚¬ìš©í•  ìƒ‰ê¹” ì´ˆê¸°í™”
 void setColor()
 {
-    //±âº» »öÀÌ ³Ê¹« Ä¢Ä¢ÇØ¼­ ¹à°Ô ¹Ù²å½À´Ï´Ù.
+    //ê¸°ë³¸ ìƒ‰ì´ ë„ˆë¬´ ì¹™ì¹™í•´ì„œ ë°ê²Œ ë°”ê¿¨ìŠµë‹ˆë‹¤.
     // start_color();
-    init_color(11,1000,1000,1000); //ºó°ø°£»ö (Èò»ö);
-    init_color(12, 400, 400, 400); // ÀÏ¹İº® »ö (È¸»ö);
-    init_color(13, 0,0,0);// ¹«Àû º®(°ËÀº»ö);
-    init_color(14,1000,700,0 ); // ¸ö»ö (³ë¶õ»ö)
-    init_color(15, 1000, 400,0); // ¸Ó¸®»ö (¿À·»Áö;
-    init_color(18,1000,100,500); // °ÔÀÌÆ®»ö(ÇÎÅ©)
-    // ¸¸µç »ö»ó Àû¿ë
-    init_pair(1, 11, 11); //ºó°ø°£ »ö
-    init_pair(2,12,12);                     // ÀÏ¹İ º® »ö
-    init_pair(3, 13, 13); // µıµıº® »ö
-    init_pair(4, 14, 14); //¹ì ¸öÅë »ö
-    init_pair(5,  15, 15); // ¹ì ¸Ó¸® »ö
-    init_pair(6, COLOR_GREEN, COLOR_GREEN); // µ¶»ö
-    init_pair(7, COLOR_RED, COLOR_RED); //»ç°ú»ö
-    init_pair(8, 18,18); //°ÔÀÌÆ®»ö
-    init_pair(10, COLOR_BLACK, COLOR_WHITE); //»óÅÂÃ¢ »ö
+    init_color(11,1000,1000,1000); //ë¹ˆê³µê°„ìƒ‰ (í°ìƒ‰);
+    init_color(12, 400, 400, 400); // ì¼ë°˜ë²½ ìƒ‰ (íšŒìƒ‰);
+    init_color(13, 0,0,0);// ë¬´ì  ë²½(ê²€ì€ìƒ‰);
+    init_color(14,1000,700,0 ); // ëª¸ìƒ‰ (ë…¸ë€ìƒ‰)
+    init_color(15, 1000, 400,0); // ë¨¸ë¦¬ìƒ‰ (ì˜¤ë Œì§€;
+    init_color(18,1000,100,500); // ê²Œì´íŠ¸ìƒ‰(í•‘í¬)
+    // ë§Œë“  ìƒ‰ìƒ ì ìš©
+    init_pair(1, 11, 11); //ë¹ˆê³µê°„ ìƒ‰
+    init_pair(2,12,12);                     // ì¼ë°˜ ë²½ ìƒ‰
+    init_pair(3, 13, 13); // ë”´ë”´ë²½ ìƒ‰
+    init_pair(4, 14, 14); //ë±€ ëª¸í†µ ìƒ‰
+    init_pair(5,  15, 15); // ë±€ ë¨¸ë¦¬ ìƒ‰
+    init_pair(6, COLOR_GREEN, COLOR_GREEN); // ë…ìƒ‰
+    init_pair(7, COLOR_RED, COLOR_RED); //ì‚¬ê³¼ìƒ‰
+    init_pair(8, 18,18); //ê²Œì´íŠ¸ìƒ‰
+    init_pair(10, COLOR_BLACK, COLOR_WHITE); //ìƒíƒœì°½ ìƒ‰
 }
 
-// »ç¿ëÀÚÀÔ·Â ¹Ş±â
+// ì‚¬ìš©ìì…ë ¥ ë°›ê¸°
 void getInput(Map& map, Snake& snake)
 {
     int input;
-    keypad(stdscr, true); //Æ¯¼öÅ° ÀÔ·Â¹Ş±â È°¼ºÈ­
+    keypad(stdscr, true); //íŠ¹ìˆ˜í‚¤ ì…ë ¥ë°›ê¸° í™œì„±í™”
     while(play == true)
     {
         input=getch();
@@ -487,9 +487,9 @@ void getInput(Map& map, Snake& snake)
                 snake.setToX(1);
                 break;
         }
-        //µğ¹ö±ë¿ë ÀÔ·Â
+        //ë””ë²„ê¹…ìš© ì…ë ¥
 
-        // ¸öÅëÃß°¡
+        // ëª¸í†µì¶”ê°€
         if (input == '1')
         {
             snake.pushBody(map.m);
@@ -497,7 +497,7 @@ void getInput(Map& map, Snake& snake)
     }
 }
 
-//-----------------------¸ŞÀÎ ÇÔ¼ö------------------------ 
+//-----------------------ë©”ì¸ í•¨ìˆ˜------------------------ 
 int main()
 {
     initscr();
@@ -505,24 +505,24 @@ int main()
     curs_set(FALSE); // 
     noecho(); // 
 
-    // ¸ÊÅ©±â ¼±ÅÃ
+    // ë§µí¬ê¸° ì„ íƒ
     selectMapSize();
 
-    // ½ÃÀÛÈ­¸é
+    // ì‹œì‘í™”ë©´
     startScreen();
 
-    // °×ÃÊ±âÈ­
-    Map map(mapWidth,mapHeight);// ¸Ê ÃÊ±âÈ­
-    Item item(map.m,map.getHeight(),map.getWidth());//¾ÆÀÌÅÛ ¸®½ºÆ® ÃÊ±âÈ­ 
-    Snake snake(map.m,map.getHeight(),map.getWidth());// ¹ì ÃÊ±âÈ­
-    GateNWall gnw(map.m,map.getHeight(),map.getWidth());// °ÔÀÌÆ® &¿ù ÃÊ±âÈ­
-    Score score;//È­¸é 
+    // ê²œì´ˆê¸°í™”
+    Map map(mapWidth,mapHeight);// ë§µ ì´ˆê¸°í™”
+    Item item(map.m,map.getHeight(),map.getWidth());//ì•„ì´í…œ ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™” 
+    Snake snake(map.m,map.getHeight(),map.getWidth());// ë±€ ì´ˆê¸°í™”
+    GateNWall gnw(map.m,map.getHeight(),map.getWidth());// ê²Œì´íŠ¸ &ì›” ì´ˆê¸°í™”
+    Score score;//í™”ë©´ 
 
-    setColor(); //»ç¿ëÇÒ »ö±ò ÃÊ±âÈ­
+    setColor(); //ì‚¬ìš©í•  ìƒ‰ê¹” ì´ˆê¸°í™”
 
-    thread t(timeUpdate,&score,&map, &snake, &item, &gnw) ; // ½º·¹µå »ı¼º
-    getInput(map,snake); //»ç¿ëÀÚÀÔ·Â ¹Ş±â    
+    thread t(timeUpdate,&score,&map, &snake, &item, &gnw) ; // ìŠ¤ë ˆë“œ ìƒì„±
+    getInput(map,snake); //ì‚¬ìš©ìì…ë ¥ ë°›ê¸°    
 
-    if(t.joinable()){t.join();} // ¾²·¹µå ³¡³ª±æ ±â´Ù¸²
+    if(t.joinable()){t.join();} // ì“°ë ˆë“œ ëë‚˜ê¸¸ ê¸°ë‹¤ë¦¼
     return 0;
 }
