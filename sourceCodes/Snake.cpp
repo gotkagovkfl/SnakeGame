@@ -131,7 +131,6 @@ void Snake::afterMove(Object**& m,Item& item,GateNWall& gnw)
                 if (s.size() == 2){
                     fail();
                 }
-
             }
             else if (obj.getTN()==7)  // 사과먹으면
             {

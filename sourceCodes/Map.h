@@ -1,3 +1,7 @@
+//기여도 
+// 김중현 40 %
+// 김유진 60 %
+
 #include "Object.h"
 
 
@@ -13,13 +17,13 @@ class Map
         Object** m;
 
         //생성자
-        Map(int w,int h);
+        Map(int w,int h); //@김중현(20163199)
         //게터
-        int getHeight(){return height;}
+        int getHeight(){return height;} 
         int getWidth(){return width;}
 
         // 가로 벽 생성
-        void makeHorizontal(int height);
+        void makeHorizontal(int height); //@author 김유진(20203045)
         // 세로 벽 생성 
-        void makeVertical(int width);
+        void makeVertical(int width);  //@author 김유진(20203045)
 };

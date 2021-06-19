@@ -1,3 +1,5 @@
+//@author 김중현(201631999) 100%
+
 #ifndef __GATE__
 #define __GATE__
 

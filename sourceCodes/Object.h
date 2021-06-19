@@ -1,3 +1,5 @@
+//@author 김중현(20163199)
+
 #ifndef __OBJ__
 #define __OBJ__
 

@@ -1,3 +1,8 @@
+// 기여도
+// 김중현 10 %
+// 구예진 10 %
+// 김유진 80 %
+
 #include <ncurses.h>
 #include <vector>
 #include <thread>
@@ -11,7 +16,7 @@
 
 using namespace std;
 
-//
+// 상태변수들
 bool play= true; //게임 종료 플래그
 bool gameClear = false;
 void fail(){play=false;} // 게임 종료 함수
@@ -21,9 +26,9 @@ int mapHeight;
 int gateUse = 0;
 int plusScore = 0;
 int minusScore = 0;
-
 //----------------ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ--------전역함수----------------------- 
-// 게임오버화면
+// 게임오버화면 
+//@author 김유진(20203045)
 void gameover()
 {
     clear();
@@ -46,6 +51,7 @@ void gameover()
     fail();
 }
 // 클리어화면
+//@author 김유진(20203045)
 void GameClear()
 {
     clear();
@@ -142,6 +148,7 @@ void GameClear()
 }
 
 //시작대기화면
+//@author 김유진(20203045)
 void startScreen()
 {
     start_color();
@@ -269,6 +276,7 @@ void startScreen()
 }
 
 //맵 그래픽 생성 
+//@author 김중현(20163199)
 void mapUpdate(Object** m, int h, int w)
 {
     clear();
@@ -284,12 +292,12 @@ void mapUpdate(Object** m, int h, int w)
     refresh();
 }
 
-// 시간의 흐름             // 레퍼런스 전달시 컴파일에러
+// 시간의 흐름
 void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
 {
     for(int a=0;a <5; a++)
     {
-        //상태창 (스테이지마다 상태창을 새로 씀)
+        //상태창 (스테이지마다 상태창을 새로 씀) //@author 김유진(20203045)
         WINDOW *win;
         win = newwin(map->getHeight(),30,0,map->getWidth()*2);
         wbkgd(win, COLOR_PAIR(10));
@@ -314,7 +322,7 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
         double ItemCD = 0;
         double GateCD = 0;
 
-        // 스테이지 별로 뱀 위치 조정
+        // 스테이지 별로 뱀 위치 조정 //@author 김유진(20203045)
         if(a > 0)
         {
             s->Init(map->m);
@@ -334,14 +342,14 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
             mvwprintw(win, 6,2, "STAGE: %d",score->stageNum);
             mvwprintw(win, 10,2, "num of items : %d     ",i->numItem);
 
-            //ItemCD가 0이 될때마다 아이템 생성 
+            //ItemCD가 0이 될때마다 아이템 생성 //@author 김중현(20163199)
             if (ItemCD==0)  
             {
                 if (i->numItem >=3){ i->popItem(map->m);} //아이템이 3개면 가장 오래된 아이템 삭제함
                 i->pushItem(map->m);
                 ItemCD=initItemCD; //카운트다운 초기화
             }
-            // GateCD가 0이 될때마다 게이트 생성
+            // GateCD가 0이 될때마다 게이트 생성 //@author 김중현(20163199)
             s->decreaseOnGate();
             if (GateCD==0)
             {
@@ -352,7 +360,7 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
             s->move(map->m,*i,*g);  // 뱀 움직임 업데이트
             mapUpdate(map->m,mapHeight,mapWidth); // 맵그래픽 갱신
 
-            // 점수판업데이트
+            // 점수판업데이트 //@author 김유진(20203045)
             if(score->stageNum == 1)
             {
                 mvwprintw(win, 7,2, "SCORE: %d/3",s->numBody-3);
@@ -414,6 +422,7 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
     if(gameClear) GameClear();
 }
 // 맵크기 선택
+//@author 김유진(20203045)
 void selectMapSize()
 {
     mvprintw(3, 8, "select map size number and press number key");
@@ -446,6 +455,7 @@ void selectMapSize()
 }
 
 // 사용할 색깔 초기화
+//@author 김중현(20163199)
 void setColor()
 {
     //기본 색이 너무 칙칙해서 밝게 바꿨습니다.
@@ -469,7 +479,8 @@ void setColor()
 }
 
 // 사용자입력 받기
-void getInput(Map& map, Snake& snake)
+//@author 구예진(20192004)
+void getInput(Snake& snake)
 {
     int input;
     keypad(stdscr, true); //특수키 입력받기 활성화
@@ -498,13 +509,6 @@ void getInput(Map& map, Snake& snake)
                 snake.setToX(1);
                 break;
         }
-        //디버깅용 입력
-
-        // 몸통추가
-        if (input == '1')
-        {
-            snake.pushBody(map.m);
-        }
     }
 }
 
@@ -532,7 +536,7 @@ int main()
     setColor(); //사용할 색깔 초기화
 
     thread t(timeUpdate,&score,&map, &snake, &item, &gnw) ; // 스레드 생성
-    getInput(map,snake); //사용자입력 받기    
+    getInput(snake); //사용자입력 받기    
 
     if(t.joinable()){t.join();} // 쓰레드 끝나길 기다림
     return 0;

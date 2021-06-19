@@ -22,6 +22,7 @@ Map::Map(int w,int h): width(w), height(h)
 }
 
 // 가로 벽 생성
+
 void Map::makeHorizontal(int height)
 {
     for(int i = 4; i < width-4; i++)
@@ -31,6 +32,7 @@ void Map::makeHorizontal(int height)
     }
 }
 // 세로 벽 생성 
+//@author 김유진(20203045)
 void Map::makeVertical(int width)
 {
     for(int i = 4; i < height-4; i++)

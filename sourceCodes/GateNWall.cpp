@@ -1,3 +1,5 @@
+//@author 김중현(201631999) 100%
+
 #include "GateNWall.h"
 #include <random>
 #include <time.h>
