@@ -1,7 +1,7 @@
 #include "Snake.h"
 
 //생성자
-Snake::Snake(Object**& m,int h,int w) : tailY(h/2), tailX(w/2)
+Snake::Snake(Object**& m,int h,int w) : tailY(h/2), tailX(w/2), mapHeight(h),mapWidth(w)
 {
     //처음에 길이가 3인 뱀 생성
     Head head(tailY,tailX);
@@ -32,11 +32,34 @@ void Snake::Init(Object**& m)
 //뱀 몸통 생성
 void Snake::pushBody(Object**& m)
 {
-    //모서리에서 생성시 가끔 벽 뚫는 현상 해결해야함 **********************************여기서
+    //기본 몸통생성 지점 
     int chaiY = s[numBody-1].getY()-s[numBody-2].getY();
-    int chaiX = s[numBody-1].getX()-s[numBody-2].getX();
-    tailY += chaiY;
-    tailX += chaiX;
+    int chaiX = s[numBody-1].getX()-s[numBody-2].getX(); 
+    
+    int tempY;
+    int tempX;
+    // 원형 리스트의 시작 인덱스 구하기
+    for(int i=0;i<4;i++)
+    {
+        if (nextTailPos[i][0]== chaiY && nextTailPos[i][1]== chaiX) {idxForFind=i;break;} 
+    }
+    //시계방향으로 탐색
+    for (int i=0;i<4;i++)
+    {
+        tempY= tailY+nextTailPos[idxForFind][0],  
+        tempX= tailX+nextTailPos[idxForFind][1]; // 현재 꼬리 위치에서 시계방향으로 찾기
+        // 해당좌표가 빈공간이라면, 게이트의 출구임
+        if (0<=tempY &&tempY<mapHeight&& 0<tempX &&tempX< mapWidth) // 시계방향으로 확인하는 좌표가 맵 밖이 아니어야함
+        {
+            if (m[tempY][tempX].getTN()==1){break;}   //탐색하는 좌표가 빈공간이면 원형리스트의 현재 인덱스를 사용함
+        }
+        ++idxForFind%=4;
+    }
+    int tempChaiY = nextTailPos[idxForFind][0];
+    int tempChaiX = nextTailPos[idxForFind][1];
+    
+    tailY += tempChaiY;
+    tailX += tempChaiX;
     Body tail(tailY,tailX);
     m[tailY][tailX] = tail;
 
@@ -100,6 +123,7 @@ void Snake::afterMove(Object**& m,Item& item,GateNWall& gnw)
                 // 벽에 닿았을 때의 경우도 만들어야함 **********************************************************************
             if (obj.getTN()==6)  //독먹으면 
             {
+                minusScore++;
                 popBody(m);
                 item.eraseItem(obj.getY(),obj.getX()); // 특정 아이템 제거
 
@@ -111,6 +135,7 @@ void Snake::afterMove(Object**& m,Item& item,GateNWall& gnw)
             }
             else if (obj.getTN()==7)  // 사과먹으면
             {
+                plusScore++;
                 pushBody(m);
                 item.eraseItem(obj.getY(),obj.getX());
             }

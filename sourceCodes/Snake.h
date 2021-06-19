@@ -8,6 +8,8 @@ using namespace std;
 extern int mapWidth;
 extern int mapHeight;
 extern int gateUse;
+extern int plusScore;
+extern int minusScore;
 extern void fail();
 
 //----------------------뱀 클래스------------------------------ 
@@ -16,6 +18,7 @@ class Snake
     int toX=-1;
     int toY=0;
     int nextY, nextX;
+    int mapHeight, mapWidth;
     
     public:
         int numBody=2;
@@ -23,6 +26,10 @@ class Snake
         int  tailY, tailX;
         vector <Object> s;
         
+        //출구를 구하기 위한 변수들
+        int nextTailPos[4][2] ={{-1,0},{0,1},{1,0},{0,-1}};
+        int idxForFind=0;
+
         //생성자
         Snake(Object**& m,int h,int w);
 
@@ -34,7 +41,7 @@ class Snake
         int getToX(){return toX;}
 
         //게이트 통과중임을 나타내는 상태변수 조정
-        void setOnGate(){onGate=numBody;}
+        void setOnGate(){onGate=numBody;} //게이트를 통과할 몸의 수를 
         void decreaseOnGate(){if(onGate){onGate--;}}
 
         //맵전환시 뱀의 위치 초기화

@@ -1,6 +1,8 @@
 #include <ncurses.h>
 
 extern int gateUse;
+extern int plusScore;
+extern int minusScore;
 extern bool gameClear;
 
 class Score
@@ -14,4 +16,6 @@ public:
     :stageNum(stageNum), scoreBodyLen(scoreBodyLen), scoreGateUse(scoreGateUse){}
     //점수달성 여부를 확인하고 화면전환
     bool LevelUp();
+    void nextStageScreen();
+    void nextStage();
 };
