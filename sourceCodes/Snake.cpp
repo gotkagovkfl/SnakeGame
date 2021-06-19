@@ -123,6 +123,7 @@ void Snake::afterMove(Object**& m,Item& item,GateNWall& gnw)
                 // 벽에 닿았을 때의 경우도 만들어야함 **********************************************************************
             if (obj.getTN()==6)  //독먹으면 
             {
+                minusScore++;
                 popBody(m);
                 item.eraseItem(obj.getY(),obj.getX()); // 특정 아이템 제거
 
@@ -134,6 +135,7 @@ void Snake::afterMove(Object**& m,Item& item,GateNWall& gnw)
             }
             else if (obj.getTN()==7)  // 사과먹으면
             {
+                plusScore++;
                 pushBody(m);
                 item.eraseItem(obj.getY(),obj.getX());
             }

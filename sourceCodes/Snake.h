@@ -8,6 +8,8 @@ using namespace std;
 extern int mapWidth;
 extern int mapHeight;
 extern int gateUse;
+extern int plusScore;
+extern int minusScore;
 extern void fail();
 
 //----------------------뱀 클래스------------------------------ 
