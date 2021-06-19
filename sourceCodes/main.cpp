@@ -483,7 +483,7 @@ void getInput(Map& map, Snake& snake)
         // 몸통추가
         if (input == '1')
         {
-            snake.addBody(map.m);
+            snake.pushBody(map.m);
         }
     }
 }
