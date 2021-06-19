@@ -13,5 +13,5 @@ public:
     Score(int stageNum = 1, int scoreBodyLen = 0, int scoreGateUse = 0)
     :stageNum(stageNum), scoreBodyLen(scoreBodyLen), scoreGateUse(scoreGateUse){}
     //점수달성 여부를 확인하고 화면전환
-    bool LevelUp();
+    bool LevelUp(); 
 };

@@ -333,41 +333,32 @@ void timeUpdate(Score *score, Map *map,Snake *s,Item *i,GateNWall *g)
             mvwprintw(win, 4,2, "STATUS:");
             mvwprintw(win, 6,2, "STAGE: %d",score->stageNum);
             mvwprintw(win, 10,2, "num of items : %d     ",i->numItem);
-            // wclear(stdscr);
 
             //ItemCD가 0이 될때마다 아이템 생성 
             if (ItemCD==0)  
             {
-                if (time >=initItemCD*0.003 && i->numItem >=3) // 동시에 3개만 유지할수있도록. 근데 가끔씩 4개됨. 해결 필요 ****************************** 
-                {
-                    i->popItem(map->m);
-                }
+                if (i->numItem >=3){ i->popItem(map->m);} //아이템이 3개면 가장 오래된 아이템 삭제함
                 i->pushItem(map->m);
-                ItemCD=initItemCD;
+                ItemCD=initItemCD; //카운트다운 초기화
             }
             // GateCD가 0이 될때마다 게이트 생성
             s->decreaseOnGate();
             if (GateCD==0)
             {
                 if (s->onGate==0){g->selectGate(map->m);} //게이트 생성
-
-                GateCD=initGateCD;
-
-                // mvwprintw(win, 11,2, "(%d,%d)  ,  (%d,%d)   ",g->gate1.getY(),g->gate1.getX(),g->gate2.getY(),g->gate2.getX()); //占쏙옙占쏙옙占쏙옙 占쏙옙탈占쏙옙치 占쏙옙占
+                GateCD=initGateCD; //카운트다운 초기화
             }
             
-            // 뱀 움직임 업데이트
-            s->move(map->m,*i,*g);
-            mapUpdate(map->m,mapHeight,mapWidth);
+            s->move(map->m,*i,*g);  // 뱀 움직임 업데이트
+            mapUpdate(map->m,mapHeight,mapWidth); // 맵그래픽 갱신
 
-            // 점수업데이트
+            // 점수판업데이트
             if(score->stageNum == 1) mvwprintw(win, 7,2, "SCORE: %d/3     ",s->numBody-3);
             else if(score->stageNum == 2) mvwprintw(win, 7,2, "SCORE: %d/5     ",s->numBody-3);
             else if(score->stageNum == 3) mvwprintw(win, 7,2, "SCORE: %d/7     ",s->numBody-3);
             else if(score->stageNum == 4) mvwprintw(win, 7,2, "SCORE: %d/10     ",s->numBody-3);
             mvwprintw(win, 8,2, "GateUse: %d/3     ",gateUse);
             score->scoreBodyLen = s->numBody-3;
-            
 
             // 시간 업데이트
             mvwprintw(win, 9,2, "TIME: %1.1f sec  ",time);
@@ -492,7 +483,7 @@ void getInput(Map& map, Snake& snake)
         // 몸통추가
         if (input == '1')
         {
-            snake.pushBody(map.m);
+            snake.addBody(map.m);
         }
     }
 }
